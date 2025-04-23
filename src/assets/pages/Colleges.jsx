@@ -49,7 +49,7 @@ const Colleges = () => {
         <div className="flex gap-8">
           <div className="relative">
             <button className="text-green-700 text-2xl font-bold px-0">Graduate School</button>
-            <div className className="absolute bottom-0 left-0 w-full h-1 bg-green-700 rounded-full"></div>
+            <div className ="absolute bottom-0 left-0 w-full h-1 bg-green-700 rounded-full"></div>
           </div>
           <button
             className="text-gray-500 text-2xl px-0 hover:text-green-700 transition-colors duration-200"
