@@ -6,39 +6,35 @@ const Colleges = () => {
   // Only include the 5 specified colleges for graduate programs
   const collegeLogos = [
     {
-      id: "CCIS",
-      path: "/ccis",
-      fullName: "COLLEGE OF COMPUTING AND INFORMATION SCIENCES",
+      path: "/colleges/ccis-graduate",
       color: "#8B2E00",
-      logo: "/images/logos/ccis-logo.png",
+      logo: "/images/ccis-logo.png",
     },
     {
-      id: "CED",
-      path: "/ced",
-      fullName: "COLLEGE OF EDUCATION",
+      path: "/colleges/ced-graduate",
       color: "#0047AB",
-      logo: "/images/logos/ced-logo.png",
+      logo: "/images/ced-logo.png",
     },
     {
-      id: "CAA",
-      path: "/caa",
-      fullName: "COLLEGE OF AGRICULTURE AND AGRI-INDUSTRIES",
+      path: "/colleges/caa-graduate",
       color: "#3E7B31",
-      logo: "/images/logos/caa-logo.png",
+      logo: "/images/caa-logo.png",
     },
     {
-      id: "CMNS",
-      path: "/cmns",
-      fullName: "COLLEGE OF MATHEMATICS AND NATURAL SCIENCES",
+      path: "/colleges/cmns-graduate",
       color: "#008080",
-      logo: "/images/logos/cmns-logo.png",
+      logo: "/images/cmns-logo.png",
     },
     {
-      id: "COFES",
-      path: "/cofes",
-      fullName: "COLLEGE OF FORESTRY AND ENVIRONMENTAL SCIENCES",
+      path: "/colleges/cofes-graduate",
       color: "#3E7B31",
-      logo: "/images/logos/cofes-logo.png",
+      logo: "/images/cofes-logo.png",
+    },
+
+    {
+      path: "/colleges/chass-graduate",
+      color: "#3E7B31",
+      logo: "/images/chass-logo.png",
     },
   ]
 
@@ -49,11 +45,11 @@ const Colleges = () => {
         <div className="flex gap-8">
           <div className="relative">
             <button className="text-green-700 text-2xl font-bold px-0">Graduate School</button>
-            <div className ="absolute bottom-0 left-0 w-full h-1 bg-green-700 rounded-full"></div>
+            <div className="absolute bottom-0 left-0 w-full h-1 bg-green-700 rounded-full"></div>
           </div>
           <button
             className="text-gray-500 text-2xl px-0 hover:text-green-700 transition-colors duration-200"
-            onClick={() => window.location.assign("/undergrad")}
+            onClick={() => (window.location.href = "/undergrad")}
           >
             Under-Graduate
           </button>
@@ -67,7 +63,7 @@ const Colleges = () => {
             <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 h-[350px] flex flex-col items-center justify-between p-6">
               {/* Logo */}
               <div className="flex-1 w-full flex flex-col items-center justify-center mb-4">
-                <div className="w-[180px] h-[180px] flex items-center justify-center bg-white rounded-xl mb-5 overflow-hidden">
+                <div className="w-[220px] h-[220px] flex items-center justify-center bg-white rounded-xl mb-5 overflow-hidden">
                   <img
                     src={college.logo || "/placeholder.svg"}
                     alt={`${college.id} Logo`}
@@ -76,7 +72,6 @@ const Colleges = () => {
                 </div>
                 <div className="text-center">
                   <h3 className="text-xl font-bold">
-                    <span className="text-gray-700">CSU</span>
                     <span style={{ color: college.color }}>{college.id}</span>
                   </h3>
                   <p
