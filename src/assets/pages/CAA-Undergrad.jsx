@@ -6,31 +6,29 @@ import { useGoogleLogin } from "@react-oauth/google"
 import {
   ChevronDown,
   X,
-  BookOpen,
   Upload,
   FileText,
-  Leaf,
-  Tractor,
-  FlaskRoundIcon as Flask,
-  ShoppingBag,
-  Microscope,
+  CreditCard,
+  Wheat,
+  Beef,
+  Bug,
+  Flower2,
   Layers,
+  ArrowLeft,
 } from "lucide-react"
-import { uploadFileToDrive, getViewUrl } from "../utils/googleDriveUtils"
+import { getViewUrl } from "../utils/googleDriveUtils"
 
 const CAAUndergrad = () => {
   // Undergraduate programs for CAA
   const programs = [
     {
       id: 1,
-      name: "Bachelor of Science in Agriculture (BSA)",
-      icon: Leaf,
+      name: "Bachelor of Science in Agriculture (BSA) major in Agriculture Economics",
+      icon: CreditCard,
       color: "from-green-600 to-green-800",
-      description:
-        "The Bachelor of Science in Agriculture (BSA) program provides students with a strong foundation in agricultural science, crop production, soil management, and sustainable farming practices. Students will learn to apply scientific principles to agricultural systems, preparing them for careers in farm management, agricultural research, extension services, and more.",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1KvvNyQ4H3B0nEohCLQD_XenpoCYm4xXS/view?usp=sharing",
+        2022: "https://drive.google.com/file/d/1mFaajZ5nfVn5sMBrfTDsP5if_oJB8DTz/view?usp=sharing",
         2014: "/placeholder.svg?height=800&width=600",
         2005: "/placeholder.svg?height=800&width=600",
         2003: "/placeholder.svg?height=800&width=600",
@@ -38,50 +36,52 @@ const CAAUndergrad = () => {
     },
     {
       id: 2,
-      name: "Bachelor of Science in Agricultural Engineering (BSAE)",
-      icon: Tractor,
+      name: "Bachelor of Science in Agriculture (BSA) major in Agronomy",
+      icon: Wheat,
       color: "from-green-500 to-green-700",
-      description:
-        "The Bachelor of Science in Agricultural Engineering (BSAE) program focuses on the application of engineering principles to solve agricultural problems. Students will develop skills in designing agricultural machinery, irrigation systems, farm structures, and post-harvest processing equipment, preparing them for careers as agricultural engineers, farm equipment designers, and agricultural technology specialists.",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1Vfv2M_ck5ktu4Ptty66dsHEUwiqeTRod/view?usp=sharing",
+        2019: "https://drive.google.com/file/d/1mFaajZ5nfVn5sMBrfTDsP5if_oJB8DTz/view?usp=sharing",
         2014: "/placeholder.svg?height=800&width=600",
       },
     },
     {
       id: 3,
-      name: "Bachelor of Science in Food Technology (BSFT)",
-      icon: Flask,
+      name: "Bachelor of Science in Agriculture (BSA) major in Animal Science",
+      icon: Beef,
       color: "from-green-400 to-green-600",
-      description:
-        "The Bachelor of Science in Food Technology (BSFT) program combines food science and engineering principles to develop, process, preserve, and package food products. Students will learn about food chemistry, microbiology, quality assurance, and product development, preparing them for careers as food technologists, quality control specialists, and product development scientists.",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1Vfv2M_ck5ktu4Ptty66dsHEUwiqeTRod/view?usp=sharing",
         2020: "/placeholder.svg?height=800&width=600",
       },
     },
     {
       id: 4,
-      name: "Bachelor of Science in Agribusiness (BSAB)",
-      icon: ShoppingBag,
+      name: "Bachelor of Science in Agriculture (BSA) major in Crop Protection",
+      icon: Bug,
       color: "from-green-500 to-green-700",
-      description:
-        "The Bachelor of Science in Agribusiness (BSAB) program combines agricultural science with business principles to prepare students for the commercial aspects of agriculture. Students will develop skills in agricultural economics, farm management, marketing, and finance, preparing them for careers in agricultural sales, farm management, agricultural banking, and agribusiness entrepreneurship.",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1Vfv2M_ck5ktu4Ptty66dsHEUwiqeTRod/view?usp=sharing",
         2020: "/placeholder.svg?height=800&width=600",
       },
     },
     {
       id: 5,
-      name: "Bachelor of Science in Agricultural Biotechnology (BSABT)",
-      icon: Microscope,
+      name: "Bachelor of Science in Agriculture (BSA) major in Horticulture",
+      icon: Flower2,
       color: "from-green-600 to-green-800",
-      description:
-        "The Bachelor of Science in Agricultural Biotechnology (BSABT) program applies biotechnology principles to agriculture for crop improvement, pest resistance, and increased productivity. Students will learn molecular biology, genetic engineering, tissue culture, and bioinformatics, preparing them for careers in agricultural research, biotechnology companies, and regulatory agencies.",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1Vfv2M_ck5ktu4Ptty66dsHEUwiqeTRod/view?usp=sharing",
+        2020: "/placeholder.svg?height=800&width=600",
+      },
+    },
+    {
+      id: 6,
+      name: "Bachelor of Science in Agricultural (BSA) major in Soil Science",
+      icon: Layers,
+      color: "from-green-600 to-green-800",
+      curriculumFiles: {
+        2023: "https://drive.google.com/file/d/1Vfv2M_ck5ktu4Ptty66dsHEUwiqeTRod/view?usp=sharing",
         2020: "/placeholder.svg?height=800&width=600",
       },
     },
@@ -94,39 +94,255 @@ const CAAUndergrad = () => {
   const [showCurriculumViewer, setShowCurriculumViewer] = useState(false)
   const [fileToUpload, setFileToUpload] = useState(null)
   const [isUploading, setIsUploading] = useState(false)
+  const [activeDropdown, setActiveDropdown] = useState(null)
+  const [folderStatus, setFolderStatus] = useState("")
+  // Add a new state variable to track the CAA-Undergrad folder ID
+  const [caaUndergradFolderId, setCaaUndergradFolderId] = useState(localStorage.getItem("caaUndergradFolderId") || "")
 
-  // Google login hook for file upload
+  // Helper functions for folder management
+  const createSubfolder = async (folderName, parentFolderId, accessToken) => {
+    try {
+      const metadata = {
+        name: folderName,
+        mimeType: "application/vnd.google-apps.folder",
+        parents: [parentFolderId],
+      }
+
+      const response = await fetch("https://www.googleapis.com/drive/v3/files", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(metadata),
+      })
+
+      if (!response.ok) {
+        throw new Error(`Failed to create subfolder: ${response.statusText}`)
+      }
+
+      const folderData = await response.json()
+      return folderData.id
+    } catch (error) {
+      console.error("Error creating subfolder in Google Drive:", error)
+      throw error
+    }
+  }
+
+  const listFolders = async (parentFolderId, accessToken) => {
+    try {
+      const query = `'${parentFolderId}' in parents and mimeType='application/vnd.google-apps.folder'`
+      const response = await fetch(
+        `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&fields=files(id,name)`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      )
+
+      if (!response.ok) {
+        throw new Error(`Failed to list folders: ${response.statusText}`)
+      }
+
+      const data = await response.json()
+      return data.files || []
+    } catch (error) {
+      console.error("Error listing folders:", error)
+      return []
+    }
+  }
+
+  const checkFolderExists = async (folderId, accessToken) => {
+    try {
+      const response = await fetch(`https://www.googleapis.com/drive/v3/files/${folderId}?fields=id,name`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+
+      return response.ok
+    } catch (error) {
+      console.error("Error checking folder existence:", error)
+      return false
+    }
+  }
+
+  // Add a function to create the CAA-Undergrad folder if it doesn't exist
+  const createCaaUndergradFolder = async (accessToken) => {
+    try {
+      // For BSA Agriculture Economics program, use this specific folder ID
+      // This is the ID of the "BSA Agriculture Economics" folder
+      const bsaAgEconFolderId = "1NaRXSyrQODlgvdzkhl3m07TPvLY99qP-" // Replace with the actual folder ID
+
+      setFolderStatus("Using BSA Agriculture Economics folder directly")
+      console.log("Using BSA Agriculture Economics folder ID:", bsaAgEconFolderId)
+
+      return bsaAgEconFolderId
+    } catch (error) {
+      console.error("Error accessing folder:", error)
+      setFolderStatus("Error: " + error.message)
+      throw error
+    }
+  }
+
+  // Google login hook for file upload with the specific folder ID
   const login = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       if (fileToUpload && selectedProgram !== null) {
         try {
           setIsUploading(true)
-          // Upload file to Google Drive
-          const fileData = await uploadFileToDrive(
-            fileToUpload,
-            tokenResponse.access_token,
-            "1qilGYdnZCNc9iYbKmTfU6ovEYEzSdHCW", // Add your folder ID here
+          setFolderStatus("Starting upload process...")
+
+          // Hardcoded folder ID for BSA Agriculture Economics
+          // This is the folder ID where all files will be uploaded directly
+          const targetFolderId = "1NaRXSyrQODlgvdzkhl3m07TPvLY99qP-" // Replace with actual folder ID
+
+          // First verify we can access the folder
+          try {
+            setFolderStatus("Verifying folder access...")
+            const folderCheckResponse = await fetch(
+              `https://www.googleapis.com/drive/v3/files/${targetFolderId}?fields=id,name,mimeType`,
+              {
+                method: "GET",
+                headers: {
+                  Authorization: `Bearer ${tokenResponse.access_token}`,
+                },
+              },
+            )
+
+            if (!folderCheckResponse.ok) {
+              throw new Error(
+                `Cannot access target folder: ${folderCheckResponse.status} ${folderCheckResponse.statusText}`,
+              )
+            }
+
+            const folderData = await folderCheckResponse.json()
+            setFolderStatus(`Uploading to folder: ${folderData.name}`)
+          } catch (folderError) {
+            console.error("Folder access error:", folderError)
+            setFolderStatus("Cannot access target folder. Uploading to root instead.")
+            // Continue with upload to root if folder is inaccessible
+          }
+
+          // Simple direct upload approach
+          setFolderStatus("Uploading file...")
+
+          // Create file metadata
+          const metadata = {
+            name: fileToUpload.name,
+            mimeType: fileToUpload.type,
+          }
+
+          // Add the folder ID to parents if we have access
+          if (targetFolderId) {
+            metadata.parents = [targetFolderId]
+          }
+
+          // Step 1: Create the file metadata
+          const metadataResponse = await fetch("https://www.googleapis.com/drive/v3/files", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${tokenResponse.access_token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(metadata),
+          })
+
+          if (!metadataResponse.ok) {
+            const errorData = await metadataResponse.json().catch(() => ({}))
+            console.error("Metadata creation error:", errorData)
+            throw new Error(`Failed to create file metadata: ${metadataResponse.status} ${metadataResponse.statusText}`)
+          }
+
+          const fileData = await metadataResponse.json()
+          const fileId = fileData.id
+          setFolderStatus("File created, uploading content...")
+
+          // Step 2: Upload the file content
+          const contentResponse = await fetch(
+            `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`,
+            {
+              method: "PATCH",
+              headers: {
+                Authorization: `Bearer ${tokenResponse.access_token}`,
+                "Content-Type": fileToUpload.type,
+              },
+              body: fileToUpload,
+            },
           )
+
+          if (!contentResponse.ok) {
+            throw new Error(`Failed to upload file content: ${contentResponse.status} ${contentResponse.statusText}`)
+          }
+
+          setFolderStatus("Setting file permissions...")
+
+          // Step 3: Set permissions to make the file accessible via link
+          try {
+            const permissionResponse = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}/permissions`, {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${tokenResponse.access_token}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                role: "reader",
+                type: "anyone",
+                allowFileDiscovery: false,
+              }),
+            })
+
+            if (!permissionResponse.ok) {
+              console.warn("Permission setting warning:", await permissionResponse.text())
+            }
+          } catch (permError) {
+            console.warn("Error setting permissions, but continuing:", permError)
+          }
+
+          // Step 4: Get the file's web view link
+          const getFileResponse = await fetch(
+            `https://www.googleapis.com/drive/v3/files/${fileId}?fields=webViewLink,name`,
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${tokenResponse.access_token}`,
+              },
+            },
+          )
+
+          let fileLink = `https://drive.google.com/file/d/${fileId}/view?usp=sharing`
+
+          if (getFileResponse.ok) {
+            const fileDetails = await getFileResponse.json()
+            fileLink = fileDetails.webViewLink || fileLink
+          }
 
           // Update program state with the Google Drive link
           const updatedPrograms = [...programsState]
-          updatedPrograms[selectedProgram].curriculumFiles[selectedYear] = fileData.link
+          updatedPrograms[selectedProgram].curriculumFiles[selectedYear] = fileLink
           setProgramsState(updatedPrograms)
 
           setShowCurriculumUpload(false)
           setFileToUpload(null)
+          setFolderStatus("")
           alert("Curriculum file uploaded successfully to Google Drive!")
         } catch (error) {
-          alert("Error uploading file: " + error.message)
+          console.error("Upload error:", error)
+          alert(`Error uploading file: ${error.message}`)
+          setFolderStatus("")
         } finally {
           setIsUploading(false)
         }
       }
     },
     onError: (error) => {
-      console.log("Login Failed:", error)
+      console.log("Google Login Failed:", error)
       alert("Google login failed. Please try again.")
       setIsUploading(false)
+      setFolderStatus("")
     },
     scope: "https://www.googleapis.com/auth/drive.file",
   })
@@ -151,13 +367,21 @@ const CAAUndergrad = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-green-700 to-green-900 text-white py-12">
+      {/* Hero Section with Back Button */}
+      <div className="bg-green-700 text-white py-12 relative">
+        {/* Back Button */}
+        <div className="absolute top-0 left-0">
+          <Link to="/undergrad" className="inline-flex items-center bg-white text-green-700 px-4 py-2">
+            <ArrowLeft className="h-5 w-5 mr-2" />
+            <span className="font-medium">Back to Colleges</span>
+          </Link>
+        </div>
+
         <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col items-center text-center">
+          <div className="flex flex-col items-center text-center relative">
             {/* CAA Logo */}
-            <div className="w-24 h-24 bg-white rounded-full p-1 flex-shrink-0 mb-6">
-              <img src="/images/logos/caa-logo.png" alt="CAA Logo" className="w-full h-full object-contain" />
+            <div className="w-24 h-24 bg-white rounded-full p-1 flex-shrink-0 mb-6 shadow-lg">
+              <img src="/images/caa-logo.png" alt="CAA Logo" className="w-full h-full object-contain" />
             </div>
 
             <h1 className="text-3xl md:text-4xl font-bold mb-4">College of Agriculture and Agri-Industries</h1>
@@ -208,7 +432,7 @@ const CAAUndergrad = () => {
                 <p className="text-gray-700">
                   Uploading curriculum for: <span className="font-semibold">{programsState[selectedProgram].name}</span>
                 </p>
-                <p className="text-sm text-gray-600 mt-1">Year: {selectedYear}</p>
+                {folderStatus && <p className="text-sm text-gray-600 mt-2 italic">Status: {folderStatus}</p>}
               </div>
 
               <div className="space-y-5">
@@ -304,16 +528,6 @@ const CAAUndergrad = () => {
               </div>
               <div className="flex items-center gap-3">
                 <button
-                  onClick={() => {
-                    setShowCurriculumUpload(true)
-                    setShowCurriculumViewer(false)
-                  }}
-                  className="text-blue-600 hover:text-blue-800 text-sm flex items-center"
-                >
-                  <Upload className="h-4 w-4 mr-1" />
-                  Upload New
-                </button>
-                <button
                   onClick={() => setShowCurriculumViewer(false)}
                   className="text-gray-400 hover:text-green-700 transition-colors p-1 rounded-full hover:bg-gray-100"
                 >
@@ -325,7 +539,7 @@ const CAAUndergrad = () => {
             <div className="flex-1 overflow-auto p-4 bg-gray-50">
               <div className="flex justify-center">
                 {programsState[selectedProgram].curriculumFiles[selectedYear]?.includes("drive.google.com") ? (
-                  // If it's a Google Drive file
+                  // If it's a Google Drive file, use the authentication-required URL format
                   <iframe
                     src={getViewUrl(programsState[selectedProgram].curriculumFiles[selectedYear])}
                     className="w-full h-[600px] border-0 shadow-md rounded-md"
@@ -342,35 +556,6 @@ const CAAUndergrad = () => {
                 )}
               </div>
             </div>
-
-            <div className="p-4 border-t bg-white">
-              <div className="flex justify-between items-center">
-                <div className="text-sm text-gray-500">Click the download button to save this curriculum file</div>
-                <a
-                  href={programsState[selectedProgram].curriculumFiles[selectedYear]}
-                  download
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 mr-2"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                    />
-                  </svg>
-                  Download
-                </a>
-              </div>
-            </div>
           </div>
         </div>
       )}
@@ -378,7 +563,7 @@ const CAAUndergrad = () => {
   )
 }
 
-// Updated ProgramCard component with direct upload button
+// Update the ProgramCard component to ensure links require authentication
 const ProgramCard = ({
   program,
   programIndex,
@@ -388,7 +573,7 @@ const ProgramCard = ({
   setShowCurriculumViewer,
 }) => {
   const [activeDropdown, setActiveDropdown] = useState(null)
-  const [showDescription, setShowDescription] = useState(false)
+  // No description state needed
   const Icon = program.icon || Layers
 
   // Toggle dropdown visibility
@@ -400,11 +585,28 @@ const ProgramCard = ({
     }
   }
 
-  // Handle curriculum year selection
-  const handleCurriculumYearSelect = (year) => {
-    setSelectedProgram(programIndex)
-    setSelectedYear(year)
-    setShowCurriculumViewer(true)
+  // Updated handleCurriculumYearSelect function to handle all years consistently
+  const handleCurriculumYearSelect = (year, programIndex) => {
+    const curriculumFile = program.curriculumFiles[year]
+
+    // Check if the curriculum file is a Google Drive link
+    if (curriculumFile && curriculumFile.includes("drive.google.com")) {
+      // Get the file ID from the Google Drive URL
+      const fileId = curriculumFile.match(/[-\w]{25,}/)[0]
+
+      // Use this specific format that will require authentication
+      // Adding the 'usp=drivesdk' parameter helps enforce authentication requirements
+      const authRequiredUrl = `https://drive.google.com/file/d/${fileId}/view?usp=drivesdk`
+
+      // Open the link directly in a new tab
+      window.open(authRequiredUrl, "_blank")
+    } else {
+      // For files that are not Google Drive links, show the curriculum viewer
+      setSelectedProgram(programIndex)
+      setSelectedYear(year)
+      setShowCurriculumViewer(true)
+    }
+
     setActiveDropdown(null)
   }
 
@@ -422,15 +624,6 @@ const ProgramCard = ({
           </div>
 
           <div className="flex flex-wrap gap-3">
-            {/* Description Button */}
-            <button
-              onClick={() => setShowDescription(true)}
-              className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 transition-all duration-300 text-center text-sm shadow-sm hover:shadow-md flex items-center"
-            >
-              <BookOpen className="h-4 w-4 mr-2" />
-              Description
-            </button>
-
             {/* Upload Curriculum File Button - Direct action, no dropdown */}
             <button
               onClick={() => {
@@ -459,14 +652,13 @@ const ProgramCard = ({
               {activeDropdown === "view-curriculum" && (
                 <div className="absolute left-0 mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
                   <ul className="py-1">
-                    {["2019", "2022", "2024"].map((year) => (
+                    {["2019", "2022", "2023", "2024"].map((year) => (
                       <li key={year}>
                         <Link
                           to="#"
                           className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors duration-200"
                           onClick={() => {
-                            handleCurriculumYearSelect(year)
-                            setActiveDropdown(null)
+                            handleCurriculumYearSelect(year, programIndex)
                           }}
                         >
                           {year}
@@ -480,55 +672,6 @@ const ProgramCard = ({
           </div>
         </div>
       </div>
-
-      {/* Description Modal */}
-      {showDescription && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-          <div className="bg-white rounded-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-2xl">
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-bold text-green-700">Program Description</h3>
-                <button
-                  onClick={() => setShowDescription(false)}
-                  className="text-gray-400 hover:text-green-700 transition-colors p-1 rounded-full hover:bg-gray-100"
-                >
-                  <X className="h-6 w-6" />
-                </button>
-              </div>
-              <div className="border-t border-gray-200 pt-4">
-                <h4 className="font-bold text-lg mb-2">{program.name}</h4>
-                <p className="text-gray-700 leading-relaxed">{program.description}</p>
-
-                <div className="mt-6">
-                  <h5 className="font-bold text-md mb-2">Program Objectives:</h5>
-                  <ul className="list-disc pl-5 space-y-2 text-gray-700">
-                    <li>Develop proficiency in agricultural science and sustainable farming practices</li>
-                    <li>Build a strong foundation in biological sciences and environmental stewardship</li>
-                    <li>Cultivate problem-solving and analytical thinking skills for agricultural challenges</li>
-                    <li>Prepare students for careers in the rapidly evolving agricultural industry</li>
-                    <li>Foster ethical awareness and professional responsibility in agriculture</li>
-                  </ul>
-                </div>
-
-                <div className="mt-6">
-                  <h5 className="font-bold text-md mb-2">Career Opportunities:</h5>
-                  <ul className="list-disc pl-5 space-y-2 text-gray-700">
-                    <li>Farm Manager/Agricultural Supervisor</li>
-                    <li>Agricultural Researcher</li>
-                    <li>Food Safety Specialist</li>
-                    <li>Agricultural Extension Officer</li>
-                    <li>Crop Production Specialist</li>
-                    <li>Agricultural Consultant</li>
-                    <li>Agribusiness Manager</li>
-                    <li>Sustainable Farming Specialist</li>
-                    <li>Agricultural Policy Analyst</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

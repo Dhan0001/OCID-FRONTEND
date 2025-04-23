@@ -5,51 +5,37 @@ import { Link } from "react-router-dom"
 const Undergrad = () => {
   const collegeLogos = [
     {
-      id: "CAA",
-      path: "/caa-undergrad", // Updated to point to the undergraduate CAA page
-      fullName: "COLLEGE OF AGRICULTURE AND AGRI-INDUSTRIES",
+      path: "/undergrad/caa-undergrad", // Updated path format
       color: "#3E7B31",
       logo: "/images/caa-logo.png",
     },
     {
-      id: "CCIS",
-      path: "/ccis-undergrad", // Updated to point to the undergraduate CCIS page
-      fullName: "COLLEGE OF COMPUTING AND INFORMATION SCIENCES",
+      path: "/undergrad/ccis-undergrad", // Updated path format
       color: "#8B2E00",
       logo: "/images/ccis-logo.png",
     },
     {
-      id: "CED",
-      path: "/ced-undergrad",
-      fullName: "COLLEGE OF EDUCATION",
+      path: "/undergrad/ced-undergrad", // Updated path format
       color: "#0047AB",
       logo: "/images/ced-logo.png",
     },
     {
-      id: "COFES",
-      path: "/cofes-undergrad",
-      fullName: "COLLEGE OF FORESTRY AND ENVIRONMENTAL SCIENCES",
+      path: "/undergrad/cofes-undergrad", // Updated path format
       color: "#3E7B31",
       logo: "/images/cofes-logo.png",
     },
     {
-      id: "CHASS",
-      path: "/chass-undergrad",
-      fullName: "COLLEGE OF HUMANITIES, ARTS AND SOCIAL SCIENCES",
+      path: "/undergrad/chass-undergrad", // Updated path format
       color: "#7E3794",
       logo: "/images/chass-logo.png",
     },
     {
-      id: "CEGS",
-      path: "/cegs-undergrad",
-      fullName: "COLLEGE OF ENGINEERING AND GEO-SCIENCES",
+      path: "/undergrad/cegs-undergrad", // Updated path format
       color: "#C45500",
       logo: "/images/cegs-logo.png",
     },
     {
-      id: "CMNS",
-      path: "/cmns-undergrad",
-      fullName: "COLLEGE OF MATHEMATICS AND NATURAL SCIENCES",
+      path: "/undergrad/cmns-undergrad", // Updated path format
       color: "#008080",
       logo: "/images/cmns-logo.png",
     },
@@ -80,7 +66,7 @@ const Undergrad = () => {
             <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 h-[350px] flex flex-col items-center justify-between p-6">
               {/* Logo */}
               <div className="flex-1 w-full flex flex-col items-center justify-center mb-4">
-                <div className="w-[180px] h-[180px] flex items-center justify-center bg-white rounded-xl mb-5 overflow-hidden">
+                <div className="w-[220px] h-[220px] flex items-center justify-center bg-white rounded-xl mb-5 overflow-hidden">
                   <img
                     src={college.logo || "/placeholder.svg"}
                     alt={`${college.id} Logo`}
@@ -89,7 +75,6 @@ const Undergrad = () => {
                 </div>
                 <div className="text-center">
                   <h3 className="text-xl font-bold">
-                    <span className="text-gray-700">CSU</span>
                     <span style={{ color: college.color }}>{college.id}</span>
                   </h3>
                   <p
@@ -117,4 +102,3 @@ const Undergrad = () => {
 }
 
 export default Undergrad
-

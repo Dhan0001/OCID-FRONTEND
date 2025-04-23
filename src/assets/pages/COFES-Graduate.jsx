@@ -4,9 +4,9 @@ import { Link } from "react-router-dom"
 import { useState } from "react"
 import { useGoogleLogin } from "@react-oauth/google"
 import { ChevronDown, X, Upload, FileText, TreePine, Leaf, Globe, Sprout, ArrowLeft } from "lucide-react"
-import { getViewUrl } from "../utils/googleDriveUtils"
+import { uploadFileToDrive, getViewUrl } from "../utils/googleDriveUtils"
 
-const COFESUndergrad = () => {
+const COFESGraduate = () => {
   // Undergraduate programs for COFES with updated icons
   const programs = [
     {
@@ -60,7 +60,7 @@ const COFESUndergrad = () => {
   const [showCurriculumViewer, setShowCurriculumViewer] = useState(false)
   const [fileToUpload, setFileToUpload] = useState(null)
   const [isUploading, setIsUploading] = useState(false)
-  const [folderStatus, setFolderStatus] = useState("")
+  const [uploadStatus, setUploadStatus] = useState("")
 
   // Google login hook for file upload
   const login = useGoogleLogin({
@@ -68,155 +68,62 @@ const COFESUndergrad = () => {
       if (fileToUpload && selectedProgram !== null) {
         try {
           setIsUploading(true)
-          setFolderStatus("Starting upload process...")
+          setUploadStatus("Authenticating with Google Drive...")
 
-          // Hardcoded folder ID for COFES Undergrad
-          // This is the folder ID where all files will be uploaded directly
-          const targetFolderId = "14G9gyo8VeiaaotvPGjxKNBZn8SSDMgkB" // Default folder ID
+          // Target folder ID for "BSA Agriculture Economics"
+          const targetFolderId = "1qilGYdnZCNc9iYbKmTfU6ovEYEzSdHCW" // Replace with actual folder ID
 
-          // First verify we can access the folder
+          // First, try to upload directly to the target folder
           try {
-            setFolderStatus("Verifying folder access...")
-            const folderCheckResponse = await fetch(
-              `https://www.googleapis.com/drive/v3/files/${targetFolderId}?fields=id,name,mimeType`,
-              {
-                method: "GET",
-                headers: {
-                  Authorization: `Bearer ${tokenResponse.access_token}`,
-                },
-              },
+            setUploadStatus("Uploading to College of Forestry and Environmental Sciences folder...")
+            const fileData = await uploadFileToDrive(fileToUpload, tokenResponse.access_token, targetFolderId)
+
+            // Update program state with the Google Drive link
+            const updatedPrograms = [...programsState]
+            updatedPrograms[selectedProgram].curriculumFiles[selectedYear] = fileData.link
+            setProgramsState(updatedPrograms)
+
+            setShowCurriculumUpload(false)
+            setFileToUpload(null)
+            setUploadStatus("")
+            alert("Curriculum file uploaded successfully to Google Drive!")
+          } catch (folderError) {
+            console.error("Error uploading to target folder:", folderError)
+            setUploadStatus("Target folder not accessible. Uploading to root folder...")
+
+            // If target folder upload fails, upload to root (no folder ID)
+            const fileData = await uploadFileToDrive(
+              fileToUpload,
+              tokenResponse.access_token,
+              null, // Upload to root
             )
 
-            if (!folderCheckResponse.ok) {
-              throw new Error(
-                `Cannot access target folder: ${folderCheckResponse.status} ${folderCheckResponse.statusText}`,
-              )
-            }
+            // Update program state with the Google Drive link
+            const updatedPrograms = [...programsState]
+            updatedPrograms[selectedProgram].curriculumFiles[selectedYear] = fileData.link
+            setProgramsState(updatedPrograms)
 
-            const folderData = await folderCheckResponse.json()
-            setFolderStatus(`Uploading to folder: ${folderData.name}`)
-          } catch (folderError) {
-            console.error("Folder access error:", folderError)
-            setFolderStatus("Cannot access target folder. Uploading to root instead.")
-            // Continue with upload to root if folder is inaccessible
+            setShowCurriculumUpload(false)
+            setFileToUpload(null)
+            setUploadStatus("")
+            alert(
+              "Curriculum file uploaded successfully to Google Drive root folder. Please ensure you have access to the target folder for future uploads.",
+            )
           }
-
-          // Simple direct upload approach
-          setFolderStatus("Uploading file...")
-
-          // Create file metadata
-          const metadata = {
-            name: fileToUpload.name,
-            mimeType: fileToUpload.type,
-          }
-
-          // Add the folder ID to parents if we have access
-          if (targetFolderId) {
-            metadata.parents = [targetFolderId]
-          }
-
-          // Step 1: Create the file metadata
-          const metadataResponse = await fetch("https://www.googleapis.com/drive/v3/files", {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${tokenResponse.access_token}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(metadata),
-          })
-
-          if (!metadataResponse.ok) {
-            const errorData = await metadataResponse.json().catch(() => ({}))
-            console.error("Metadata creation error:", errorData)
-            throw new Error(`Failed to create file metadata: ${metadataResponse.status} ${metadataResponse.statusText}`)
-          }
-
-          const fileData = await metadataResponse.json()
-          const fileId = fileData.id
-          setFolderStatus("File created, uploading content...")
-
-          // Step 2: Upload the file content
-          const contentResponse = await fetch(
-            `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`,
-            {
-              method: "PATCH",
-              headers: {
-                Authorization: `Bearer ${tokenResponse.access_token}`,
-                "Content-Type": fileToUpload.type,
-              },
-              body: fileToUpload,
-            },
-          )
-
-          if (!contentResponse.ok) {
-            throw new Error(`Failed to upload file content: ${contentResponse.status} ${contentResponse.statusText}`)
-          }
-
-          setFolderStatus("Setting file permissions...")
-
-          // Step 3: Set permissions to make the file accessible via link
-          try {
-            const permissionResponse = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}/permissions`, {
-              method: "POST",
-              headers: {
-                Authorization: `Bearer ${tokenResponse.access_token}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                role: "reader",
-                type: "anyone",
-                allowFileDiscovery: false,
-              }),
-            })
-
-            if (!permissionResponse.ok) {
-              console.warn("Permission setting warning:", await permissionResponse.text())
-            }
-          } catch (permError) {
-            console.warn("Error setting permissions, but continuing:", permError)
-          }
-
-          // Step 4: Get the file's web view link
-          const getFileResponse = await fetch(
-            `https://www.googleapis.com/drive/v3/files/${fileId}?fields=webViewLink,name`,
-            {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${tokenResponse.access_token}`,
-              },
-            },
-          )
-
-          let fileLink = `https://drive.google.com/file/d/${fileId}/view?usp=sharing`
-
-          if (getFileResponse.ok) {
-            const fileDetails = await getFileResponse.json()
-            fileLink = fileDetails.webViewLink || fileLink
-          }
-
-          // Update program state with the Google Drive link
-          const updatedPrograms = [...programsState]
-          updatedPrograms[selectedProgram].curriculumFiles[selectedYear] = fileLink
-          setProgramsState(updatedPrograms)
-
-          setShowCurriculumUpload(false)
-          setFileToUpload(null)
-          setFolderStatus("")
-          alert("Curriculum file uploaded successfully to Google Drive!")
         } catch (error) {
           console.error("Upload error:", error)
-          alert(`Error uploading file: ${error.message}`)
-          setFolderStatus("")
+          setUploadStatus("")
+          alert("Error uploading file: " + error.message)
         } finally {
           setIsUploading(false)
         }
       }
     },
     onError: (error) => {
-      console.log("Google Login Failed:", error)
+      console.log("Login Failed:", error)
       alert("Google login failed. Please try again.")
       setIsUploading(false)
-      setFolderStatus("")
+      setUploadStatus("")
     },
     scope: "https://www.googleapis.com/auth/drive.file",
   })
@@ -242,15 +149,15 @@ const COFESUndergrad = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       {/* Hero Section with Back Button */}
-      <div className="bg-gradient-to-r from-green-700 to-green-900 text-white py-12 relative">
+      <div className="bg-gradient-to-r from-green-800 to-green-900 text-white py-12 relative">
         {/* Back Button - Aligned with the navbar logo */}
         <div className="container mx-auto px-6 relative">
           <Link
-            to="/undergrad"
+            to="/colleges"
             className="absolute left-0 -top-6 inline-flex items-center text-green-800 hover:text-green-900 bg-white hover:bg-white/90 px-4 py-2 rounded-lg transition-all duration-200 shadow-md z-10"
           >
             <ArrowLeft className="h-5 w-5 mr-2" />
-            <span className="font-medium">Back to Colleges</span>
+            <span className="font-medium">Back to Graduate Programs</span>
           </Link>
         </div>
 
@@ -263,7 +170,7 @@ const COFESUndergrad = () => {
 
             <h1 className="text-3xl md:text-4xl font-bold mb-4">College of Forestry and Environmental Sciences</h1>
             <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto">
-              Explore our undergraduate programs designed to prepare you for success in forestry, environmental
+              Explore our graduate programs designed to prepare you for advanced careers in forestry, environmental
               management, and sustainable resource conservation.
             </p>
           </div>
@@ -272,7 +179,7 @@ const COFESUndergrad = () => {
 
       {/* Main Content */}
       <div className="container mx-auto px-6 py-12">
-        <h2 className="text-2xl font-bold text-gray-800 mb-8">Undergraduate Programs</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-8">Graduate Programs</h2>
 
         {/* Programs List */}
         <div className="space-y-8">
@@ -310,7 +217,7 @@ const COFESUndergrad = () => {
                 <p className="text-gray-700">
                   Uploading curriculum for: <span className="font-semibold">{programsState[selectedProgram].name}</span>
                 </p>
-                {folderStatus && <p className="text-sm text-gray-600 mt-2 italic">Status: {folderStatus}</p>}
+                <p className="text-sm text-gray-600 mt-1">Year: {selectedYear}</p>
               </div>
 
               <div className="space-y-5">
@@ -339,6 +246,34 @@ const COFESUndergrad = () => {
                     <p className="mt-3 text-xs text-gray-500">Supported formats: JPG, PNG, PDF (max 10MB)</p>
                   </div>
                 </div>
+
+                {uploadStatus && (
+                  <div className="mt-4 p-3 bg-green-50 text-green-700 rounded-md text-sm">
+                    <div className="flex items-center">
+                      <svg
+                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-green-700"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      {uploadStatus}
+                    </div>
+                  </div>
+                )}
 
                 <div className="flex justify-end pt-4">
                   <button
@@ -510,7 +445,11 @@ const ProgramCard = ({
     if (curriculumFile && curriculumFile.includes("drive.google.com")) {
       try {
         // Get the file ID from the Google Drive URL
-        const fileId = curriculumFile.match(/[-\w]{25,}/)[0]
+        const fileId = curriculumFile.match(/[-\w]{25,}/)?.[0]
+
+        if (!fileId) {
+          throw new Error("Could not extract file ID from URL")
+        }
 
         // Use the format that requires authentication
         const authRequiredUrl = `https://drive.google.com/file/d/${fileId}/view?usp=drivesdk`
@@ -598,4 +537,4 @@ const ProgramCard = ({
   )
 }
 
-export default COFESUndergrad
+export default COFESGraduate

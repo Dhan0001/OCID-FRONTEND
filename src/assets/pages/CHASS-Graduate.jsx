@@ -3,51 +3,20 @@
 import { Link } from "react-router-dom"
 import { useState } from "react"
 import { useGoogleLogin } from "@react-oauth/google"
-import { ChevronDown, X, Upload, FileText, TreePine, Leaf, Globe, Sprout, ArrowLeft } from "lucide-react"
-import { getViewUrl } from "../utils/googleDriveUtils"
+import { ChevronDown, X, Upload, FileText, HeartHandshake, ArrowLeft } from "lucide-react"
+import { uploadFileToDrive, getViewUrl } from "../utils/googleDriveUtils"
 
-const COFESUndergrad = () => {
-  // Undergraduate programs for COFES with updated icons
+const CHASSGraduate = () => {
+  // Graduate programs for CHASS with updated icons
   const programs = [
     {
       id: 1,
-      name: "Bachelor of Science in Forestry (BSF)",
-      icon: TreePine,
-      color: "from-green-600 to-green-800",
+      name: "Master of Arts in Guidance and Counseling (MA-GC)",
+      icon: HeartHandshake,
+      color: "from-purple-600 to-purple-800",
       curriculumFiles: {
         2023: "/placeholder.svg?height=800&width=600",
         2022: "https://drive.google.com/file/d/1KvvNyQ4H3B0nEohCLQD_XenpoCYm4xXS/view?usp=sharing",
-        2014: "/placeholder.svg?height=800&width=600",
-      },
-    },
-    {
-      id: 2,
-      name: "Bachelor of Science in Environmental Science (BSES)",
-      icon: Leaf,
-      color: "from-green-500 to-green-700",
-      curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
-        2014: "/placeholder.svg?height=800&width=600",
-      },
-    },
-    {
-      id: 3,
-      name: "Bachelor of Science in Environmental Management (BSEM)",
-      icon: Globe,
-      color: "from-green-400 to-green-600",
-      curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
-      },
-    },
-    {
-      id: 4,
-      name: "Bachelor of Science in Agroforestry (BSAF)",
-      icon: Sprout,
-      color: "from-green-500 to-green-700",
-      curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
         2020: "/placeholder.svg?height=800&width=600",
       },
     },
@@ -60,7 +29,7 @@ const COFESUndergrad = () => {
   const [showCurriculumViewer, setShowCurriculumViewer] = useState(false)
   const [fileToUpload, setFileToUpload] = useState(null)
   const [isUploading, setIsUploading] = useState(false)
-  const [folderStatus, setFolderStatus] = useState("")
+  const [uploadStatus, setUploadStatus] = useState("")
 
   // Google login hook for file upload
   const login = useGoogleLogin({
@@ -68,155 +37,62 @@ const COFESUndergrad = () => {
       if (fileToUpload && selectedProgram !== null) {
         try {
           setIsUploading(true)
-          setFolderStatus("Starting upload process...")
+          setUploadStatus("Authenticating with Google Drive...")
 
-          // Hardcoded folder ID for COFES Undergrad
-          // This is the folder ID where all files will be uploaded directly
-          const targetFolderId = "14G9gyo8VeiaaotvPGjxKNBZn8SSDMgkB" // Default folder ID
+          // Target folder ID for "BSA Agriculture Economics"
+          const targetFolderId = "1Y9Ad3bUdx0JG5cyIPbSJg4-F9h-wPAdJ" // Replace with actual folder ID
 
-          // First verify we can access the folder
+          // First, try to upload directly to the target folder
           try {
-            setFolderStatus("Verifying folder access...")
-            const folderCheckResponse = await fetch(
-              `https://www.googleapis.com/drive/v3/files/${targetFolderId}?fields=id,name,mimeType`,
-              {
-                method: "GET",
-                headers: {
-                  Authorization: `Bearer ${tokenResponse.access_token}`,
-                },
-              },
+            setUploadStatus("Uploading to College of Humanities, Arts and Social Sciences folder...")
+            const fileData = await uploadFileToDrive(fileToUpload, tokenResponse.access_token, targetFolderId)
+
+            // Update program state with the Google Drive link
+            const updatedPrograms = [...programsState]
+            updatedPrograms[selectedProgram].curriculumFiles[selectedYear] = fileData.link
+            setProgramsState(updatedPrograms)
+
+            setShowCurriculumUpload(false)
+            setFileToUpload(null)
+            setUploadStatus("")
+            alert("Curriculum file uploaded successfully to Google Drive!")
+          } catch (folderError) {
+            console.error("Error uploading to target folder:", folderError)
+            setUploadStatus("Target folder not accessible. Uploading to root folder...")
+
+            // If target folder upload fails, upload to root (no folder ID)
+            const fileData = await uploadFileToDrive(
+              fileToUpload,
+              tokenResponse.access_token,
+              null, // Upload to root
             )
 
-            if (!folderCheckResponse.ok) {
-              throw new Error(
-                `Cannot access target folder: ${folderCheckResponse.status} ${folderCheckResponse.statusText}`,
-              )
-            }
+            // Update program state with the Google Drive link
+            const updatedPrograms = [...programsState]
+            updatedPrograms[selectedProgram].curriculumFiles[selectedYear] = fileData.link
+            setProgramsState(updatedPrograms)
 
-            const folderData = await folderCheckResponse.json()
-            setFolderStatus(`Uploading to folder: ${folderData.name}`)
-          } catch (folderError) {
-            console.error("Folder access error:", folderError)
-            setFolderStatus("Cannot access target folder. Uploading to root instead.")
-            // Continue with upload to root if folder is inaccessible
+            setShowCurriculumUpload(false)
+            setFileToUpload(null)
+            setUploadStatus("")
+            alert(
+              "Curriculum file uploaded successfully to Google Drive root folder. Please ensure you have access to the target folder for future uploads.",
+            )
           }
-
-          // Simple direct upload approach
-          setFolderStatus("Uploading file...")
-
-          // Create file metadata
-          const metadata = {
-            name: fileToUpload.name,
-            mimeType: fileToUpload.type,
-          }
-
-          // Add the folder ID to parents if we have access
-          if (targetFolderId) {
-            metadata.parents = [targetFolderId]
-          }
-
-          // Step 1: Create the file metadata
-          const metadataResponse = await fetch("https://www.googleapis.com/drive/v3/files", {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${tokenResponse.access_token}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(metadata),
-          })
-
-          if (!metadataResponse.ok) {
-            const errorData = await metadataResponse.json().catch(() => ({}))
-            console.error("Metadata creation error:", errorData)
-            throw new Error(`Failed to create file metadata: ${metadataResponse.status} ${metadataResponse.statusText}`)
-          }
-
-          const fileData = await metadataResponse.json()
-          const fileId = fileData.id
-          setFolderStatus("File created, uploading content...")
-
-          // Step 2: Upload the file content
-          const contentResponse = await fetch(
-            `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`,
-            {
-              method: "PATCH",
-              headers: {
-                Authorization: `Bearer ${tokenResponse.access_token}`,
-                "Content-Type": fileToUpload.type,
-              },
-              body: fileToUpload,
-            },
-          )
-
-          if (!contentResponse.ok) {
-            throw new Error(`Failed to upload file content: ${contentResponse.status} ${contentResponse.statusText}`)
-          }
-
-          setFolderStatus("Setting file permissions...")
-
-          // Step 3: Set permissions to make the file accessible via link
-          try {
-            const permissionResponse = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}/permissions`, {
-              method: "POST",
-              headers: {
-                Authorization: `Bearer ${tokenResponse.access_token}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                role: "reader",
-                type: "anyone",
-                allowFileDiscovery: false,
-              }),
-            })
-
-            if (!permissionResponse.ok) {
-              console.warn("Permission setting warning:", await permissionResponse.text())
-            }
-          } catch (permError) {
-            console.warn("Error setting permissions, but continuing:", permError)
-          }
-
-          // Step 4: Get the file's web view link
-          const getFileResponse = await fetch(
-            `https://www.googleapis.com/drive/v3/files/${fileId}?fields=webViewLink,name`,
-            {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${tokenResponse.access_token}`,
-              },
-            },
-          )
-
-          let fileLink = `https://drive.google.com/file/d/${fileId}/view?usp=sharing`
-
-          if (getFileResponse.ok) {
-            const fileDetails = await getFileResponse.json()
-            fileLink = fileDetails.webViewLink || fileLink
-          }
-
-          // Update program state with the Google Drive link
-          const updatedPrograms = [...programsState]
-          updatedPrograms[selectedProgram].curriculumFiles[selectedYear] = fileLink
-          setProgramsState(updatedPrograms)
-
-          setShowCurriculumUpload(false)
-          setFileToUpload(null)
-          setFolderStatus("")
-          alert("Curriculum file uploaded successfully to Google Drive!")
         } catch (error) {
           console.error("Upload error:", error)
-          alert(`Error uploading file: ${error.message}`)
-          setFolderStatus("")
+          setUploadStatus("")
+          alert("Error uploading file: " + error.message)
         } finally {
           setIsUploading(false)
         }
       }
     },
     onError: (error) => {
-      console.log("Google Login Failed:", error)
+      console.log("Login Failed:", error)
       alert("Google login failed. Please try again.")
       setIsUploading(false)
-      setFolderStatus("")
+      setUploadStatus("")
     },
     scope: "https://www.googleapis.com/auth/drive.file",
   })
@@ -242,29 +118,30 @@ const COFESUndergrad = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       {/* Hero Section with Back Button */}
-      <div className="bg-gradient-to-r from-green-700 to-green-900 text-white py-12 relative">
+      <div className="bg-gradient-to-r from-purple-700 to-purple-900 text-white py-12 relative">
         {/* Back Button - Aligned with the navbar logo */}
         <div className="container mx-auto px-6 relative">
           <Link
-            to="/undergrad"
-            className="absolute left-0 -top-6 inline-flex items-center text-green-800 hover:text-green-900 bg-white hover:bg-white/90 px-4 py-2 rounded-lg transition-all duration-200 shadow-md z-10"
+            to="/colleges"
+            className="absolute left-0 -top-6 inline-flex items-center text-purple-800 hover:text-purple-900 bg-white hover:bg-white/90 px-4 py-2 rounded-lg transition-all duration-200 shadow-md z-10"
           >
             <ArrowLeft className="h-5 w-5 mr-2" />
-            <span className="font-medium">Back to Colleges</span>
+            <span className="font-medium">Back to Graduate Programs</span>
           </Link>
         </div>
 
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col items-center text-center relative">
-            {/* COFES Logo */}
+            {/* CHASS Logo */}
             <div className="w-24 h-24 bg-white rounded-full p-1 flex-shrink-0 mb-6 shadow-lg">
-              <img src="/images/cofes-logo.png" alt="COFES Logo" className="w-full h-full object-contain" />
+              <img src="/images/chass-logo.png" alt="CHASS Logo" className="w-full h-full object-contain" />
             </div>
 
-            <h1 className="text-3xl md:text-4xl font-bold mb-4">College of Forestry and Environmental Sciences</h1>
+            <h1 className="text-3xl md:text-4xl font-bold mb-4">College of Humanities, Arts and Social Sciences</h1>
             <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto">
-              Explore our undergraduate programs designed to prepare you for success in forestry, environmental
-              management, and sustainable resource conservation.
+              Explore our graduate programs designed to advance your career in the fields of humanities, arts, and
+              social sciences, with specialized training in guidance and counseling to help individuals navigate life
+              challenges.
             </p>
           </div>
         </div>
@@ -272,7 +149,7 @@ const COFESUndergrad = () => {
 
       {/* Main Content */}
       <div className="container mx-auto px-6 py-12">
-        <h2 className="text-2xl font-bold text-gray-800 mb-8">Undergraduate Programs</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-8">Graduate Programs</h2>
 
         {/* Programs List */}
         <div className="space-y-8">
@@ -285,7 +162,7 @@ const COFESUndergrad = () => {
               setSelectedYear={setSelectedYear}
               setShowCurriculumUpload={setShowCurriculumUpload}
               setShowCurriculumViewer={setShowCurriculumViewer}
-              themeColor="green"
+              themeColor="purple"
             />
           ))}
         </div>
@@ -297,20 +174,20 @@ const COFESUndergrad = () => {
           <div className="bg-white rounded-xl max-w-md w-full shadow-2xl">
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-bold text-green-700">Upload Curriculum File</h3>
+                <h3 className="text-xl font-bold text-purple-700">Upload Curriculum File</h3>
                 <button
                   onClick={() => setShowCurriculumUpload(false)}
-                  className="text-gray-400 hover:text-green-700 transition-colors p-1 rounded-full hover:bg-gray-100"
+                  className="text-gray-400 hover:text-purple-700 transition-colors p-1 rounded-full hover:bg-gray-100"
                 >
                   <X className="h-6 w-6" />
                 </button>
               </div>
 
-              <div className="mb-6 p-4 bg-green-50 rounded-lg border border-green-100">
+              <div className="mb-6 p-4 bg-purple-50 rounded-lg border border-purple-100">
                 <p className="text-gray-700">
                   Uploading curriculum for: <span className="font-semibold">{programsState[selectedProgram].name}</span>
                 </p>
-                {folderStatus && <p className="text-sm text-gray-600 mt-2 italic">Status: {folderStatus}</p>}
+                <p className="text-sm text-gray-600 mt-1">Year: {selectedYear}</p>
               </div>
 
               <div className="space-y-5">
@@ -324,7 +201,7 @@ const COFESUndergrad = () => {
                     <p className="text-gray-500 text-sm mb-4">or</p>
                     <label
                       htmlFor="curriculumFile"
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors cursor-pointer flex items-center"
+                      className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors cursor-pointer flex items-center"
                     >
                       <FileText className="h-4 w-4 mr-2" />
                       Browse Files
@@ -340,6 +217,34 @@ const COFESUndergrad = () => {
                   </div>
                 </div>
 
+                {uploadStatus && (
+                  <div className="mt-4 p-3 bg-purple-50 text-purple-700 rounded-md text-sm">
+                    <div className="flex items-center">
+                      <svg
+                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-purple-700"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      {uploadStatus}
+                    </div>
+                  </div>
+                )}
+
                 <div className="flex justify-end pt-4">
                   <button
                     type="button"
@@ -352,7 +257,7 @@ const COFESUndergrad = () => {
                   <button
                     type="button"
                     onClick={handleCurriculumUpload}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center"
+                    className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center"
                     disabled={!fileToUpload || isUploading}
                   >
                     {isUploading ? (
@@ -399,7 +304,7 @@ const COFESUndergrad = () => {
           <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col">
             <div className="p-6 flex justify-between items-center border-b">
               <div>
-                <h3 className="text-xl font-bold text-green-700">Program Curriculum</h3>
+                <h3 className="text-xl font-bold text-purple-700">Program Curriculum</h3>
                 <p className="text-sm text-gray-600">
                   {programsState[selectedProgram].name} - {selectedYear}
                 </p>
@@ -417,7 +322,7 @@ const COFESUndergrad = () => {
                 </button>
                 <button
                   onClick={() => setShowCurriculumViewer(false)}
-                  className="text-gray-400 hover:text-green-700 transition-colors p-1 rounded-full hover:bg-gray-100"
+                  className="text-gray-400 hover:text-purple-700 transition-colors p-1 rounded-full hover:bg-gray-100"
                 >
                   <X className="h-6 w-6" />
                 </button>
@@ -453,7 +358,7 @@ const COFESUndergrad = () => {
                   download
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center"
+                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -555,7 +460,7 @@ const ProgramCard = ({
                 setSelectedYear("2023") // Default to current year
                 setShowCurriculumUpload(true)
               }}
-              className="px-5 py-2.5 rounded-lg bg-white border border-green-600 text-green-600 hover:bg-green-50 transition-all duration-300 flex items-center gap-1 text-sm shadow-sm hover:shadow-md"
+              className="px-5 py-2.5 rounded-lg bg-white border border-purple-600 text-purple-600 hover:bg-purple-50 transition-all duration-300 flex items-center gap-1 text-sm shadow-sm hover:shadow-md"
             >
               <Upload className="h-4 w-4 mr-2" />
               Upload Curriculum File
@@ -565,7 +470,7 @@ const ProgramCard = ({
             <div className="relative inline-block">
               <button
                 onClick={() => toggleDropdown("view-curriculum")}
-                className="px-5 py-2.5 rounded-lg bg-white border border-green-600 text-green-600 hover:bg-green-50 transition-all duration-300 flex items-center gap-1 text-sm shadow-sm hover:shadow-md"
+                className="px-5 py-2.5 rounded-lg bg-white border border-purple-600 text-purple-600 hover:bg-purple-50 transition-all duration-300 flex items-center gap-1 text-sm shadow-sm hover:shadow-md"
               >
                 View Curriculum
                 <ChevronDown
@@ -580,7 +485,7 @@ const ProgramCard = ({
                       <li key={year}>
                         <Link
                           to="#"
-                          className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors duration-200"
+                          className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition-colors duration-200"
                           onClick={() => handleCurriculumYearSelect(year)}
                         >
                           {year}
@@ -598,4 +503,4 @@ const ProgramCard = ({
   )
 }
 
-export default COFESUndergrad
+export default CHASSGraduate

@@ -1,23 +1,24 @@
 // Upload file to Google Drive using fetch API (browser-compatible)
 export const uploadFileToDrive = async (file, accessToken, folderId = null) => {
   try {
-    // Use the default folder ID if none is provided
-    const targetFolderId = folderId || getDefaultFolderId()
+    console.log("Starting file upload to Drive, folder ID:", folderId)
 
-    console.log("Uploading file to folder ID:", targetFolderId)
-
-    // Step 1: Create a metadata request to create the file
+    // Create file metadata
     const metadata = {
       name: file.name,
       mimeType: file.type,
     }
 
-    // Add the folder ID to the parents array
-    if (targetFolderId) {
-      metadata.parents = [targetFolderId]
+    // Add the folder ID to the parents array if provided
+    if (folderId) {
+      metadata.parents = [folderId]
+      console.log("Using specified folder ID:", folderId)
+    } else {
+      console.log("No folder ID provided, uploading to root")
     }
 
-    // Create the file metadata first
+    // Step 1: Create a metadata request to create the file
+    console.log("Creating file metadata...")
     const metadataResponse = await fetch("https://www.googleapis.com/drive/v3/files", {
       method: "POST",
       headers: {
@@ -28,13 +29,17 @@ export const uploadFileToDrive = async (file, accessToken, folderId = null) => {
     })
 
     if (!metadataResponse.ok) {
-      throw new Error(`Failed to create file metadata: ${metadataResponse.statusText}`)
+      const errorData = await metadataResponse.json().catch(() => ({}))
+      console.error("Metadata creation error details:", errorData)
+      throw new Error(`Failed to create file metadata: ${metadataResponse.status} ${metadataResponse.statusText}`)
     }
 
     const fileData = await metadataResponse.json()
     const fileId = fileData.id
+    console.log("File metadata created, ID:", fileId)
 
     // Step 2: Upload the file content
+    console.log("Uploading file content...")
     const contentResponse = await fetch(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`, {
       method: "PATCH",
       headers: {
@@ -45,27 +50,41 @@ export const uploadFileToDrive = async (file, accessToken, folderId = null) => {
     })
 
     if (!contentResponse.ok) {
-      throw new Error(`Failed to upload file content: ${contentResponse.statusText}`)
+      const errorData = await contentResponse.json().catch(() => ({}))
+      console.error("Content upload error details:", errorData)
+      throw new Error(`Failed to upload file content: ${contentResponse.status} ${contentResponse.statusText}`)
     }
 
-    // Step 3: Make the file publicly accessible
-    const permissionResponse = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}/permissions`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        role: "reader",
-        type: "anyone",
-      }),
-    })
+    console.log("File content uploaded successfully")
 
-    if (!permissionResponse.ok) {
-      throw new Error(`Failed to set file permissions: ${permissionResponse.statusText}`)
+    // Step 3: Set permissions
+    console.log("Setting file permissions...")
+    try {
+      const permissionResponse = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}/permissions`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          role: "reader",
+          type: "anyone",
+          withLink: true, // Changed to true to ensure the link is accessible
+        }),
+      })
+
+      if (!permissionResponse.ok) {
+        console.warn("Permission setting warning:", await permissionResponse.text())
+      } else {
+        console.log("File permissions set successfully")
+      }
+    } catch (permError) {
+      console.warn("Error setting permissions, but continuing:", permError)
+      // Continue even if permission setting fails
     }
 
     // Step 4: Get the file's web view link
+    console.log("Getting file details...")
     const getFileResponse = await fetch(
       `https://www.googleapis.com/drive/v3/files/${fileId}?fields=webViewLink,webContentLink,name`,
       {
@@ -77,16 +96,24 @@ export const uploadFileToDrive = async (file, accessToken, folderId = null) => {
     )
 
     if (!getFileResponse.ok) {
-      throw new Error(`Failed to get file details: ${getFileResponse.statusText}`)
+      console.warn("Warning: Could not get file details, using constructed link")
+      // Return a constructed link even if we can't get the details
+      return {
+        id: fileId,
+        name: file.name,
+        link: `https://drive.google.com/file/d/${fileId}/view?usp=sharing`,
+        viewLink: `https://drive.google.com/file/d/${fileId}/view?usp=sharing`,
+      }
     }
 
     const fileDetails = await getFileResponse.json()
+    console.log("File details retrieved:", fileDetails)
 
     return {
       id: fileId,
       name: fileDetails.name || file.name,
-      link: fileDetails.webContentLink || `https://drive.google.com/uc?export=view&id=${fileId}`,
-      viewLink: fileDetails.webViewLink || `https://drive.google.com/file/d/${fileId}/view`,
+      link: fileDetails.webViewLink || `https://drive.google.com/file/d/${fileId}/view?usp=sharing`,
+      viewLink: fileDetails.webViewLink || `https://drive.google.com/file/d/${fileId}/view?usp=sharing`,
     }
   } catch (error) {
     console.error("Error uploading file to Google Drive:", error)
@@ -94,80 +121,44 @@ export const uploadFileToDrive = async (file, accessToken, folderId = null) => {
   }
 }
 
-// Create a folder in Google Drive
-export const createFolder = async (folderName, accessToken) => {
+// Update the getViewUrl function to be more reliable
+export const getViewUrl = (url) => {
   try {
-    const metadata = {
-      name: folderName,
-      mimeType: "application/vnd.google-apps.folder",
-    }
+    const fileId = getFileIdFromUrl(url)
+    if (!fileId) return url
 
-    const response = await fetch("https://www.googleapis.com/drive/v3/files", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(metadata),
-    })
-
-    if (!response.ok) {
-      throw new Error(`Failed to create folder: ${response.statusText}`)
-    }
-
-    const folderData = await response.json()
-    return folderData.id
+    // Use a URL format that will be more reliable for viewing
+    return `https://drive.google.com/file/d/${fileId}/view?usp=sharing`
   } catch (error) {
-    console.error("Error creating folder in Google Drive:", error)
-    throw error
+    console.error("Error generating view URL:", error)
+    return url
   }
 }
 
-// Get folder details
-export const getFolderDetails = async (folderId, accessToken) => {
-  try {
-    const response = await fetch(`https://www.googleapis.com/drive/v3/files/${folderId}?fields=name,id,mimeType`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-
-    if (!response.ok) {
-      throw new Error(`Failed to get folder details: ${response.statusText}`)
-    }
-
-    return await response.json()
-  } catch (error) {
-    console.error("Error getting folder details:", error)
-    throw error
-  }
-}
-
-// Helper to extract file ID from Google Drive URL
+// Improve the getFileIdFromUrl function to handle more URL formats
 export const getFileIdFromUrl = (url) => {
   if (!url) return ""
-  const matches = url.match(/[-\w]{25,}/)
-  return matches ? matches[0] : ""
-}
 
-// Get a direct view URL for a Google Drive file
-export const getViewUrl = (url) => {
-  const fileId = getFileIdFromUrl(url)
-  if (!fileId) return url
-
-  // For PDFs
-  if (url.includes(".pdf") || url.includes("application/pdf")) {
-    return `https://drive.google.com/file/d/${fileId}/preview`
+  try {
+    // Try to extract ID from various Google Drive URL formats
+    if (url.includes("/file/d/")) {
+      // Format: https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+      const match = url.match(/\/file\/d\/([^/?]+)/)
+      if (match && match[1]) return match[1]
+    } else if (url.includes("id=")) {
+      // Format: https://drive.google.com/open?id=FILE_ID
+      const match = url.match(/id=([^&]+)/)
+      if (match && match[1]) return match[1]
+    } else {
+      // Try to find any 25+ character alphanumeric string that might be an ID
+      const matches = url.match(/[-\w]{25,}/)
+      return matches ? matches[0] : ""
+    }
+  } catch (error) {
+    console.error("Error extracting file ID:", error)
   }
 
-  // For images
-  if (url.includes("image/") || url.includes(".jpg") || url.includes(".jpeg") || url.includes(".png")) {
-    return `https://drive.google.com/uc?export=view&id=${fileId}`
-  }
-
-  // Default view
-  return `https://drive.google.com/file/d/${fileId}/view`
+  return ""
 }
 
 // Set default folder ID

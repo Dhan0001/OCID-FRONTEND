@@ -3,39 +3,52 @@
 import { Link } from "react-router-dom"
 import { useState } from "react"
 import { useGoogleLogin } from "@react-oauth/google"
-import { ChevronDown, X, Upload, FileText, TreePine, Leaf, Globe, Sprout, ArrowLeft } from "lucide-react"
+import {
+  ChevronDown,
+  X,
+  Upload,
+  FileText,
+  Calculator,
+  ArrowLeft,
+  GraduationCap,
+  Microscope,
+  Building2,
+  Languages,
+  BookText,
+  Atom,
+  Users,
+} from "lucide-react"
 import { getViewUrl } from "../utils/googleDriveUtils"
 
-const COFESUndergrad = () => {
-  // Undergraduate programs for COFES with updated icons
+const CEDGraduate = () => {
+  // Undergraduate programs for CED with updated icons
   const programs = [
     {
       id: 1,
-      name: "Bachelor of Science in Forestry (BSF)",
-      icon: TreePine,
-      color: "from-green-600 to-green-800",
+      name: "Master of Science in Mathematics Education",
+      icon: Calculator,
+      color: "from-blue-600 to-blue-800",
       curriculumFiles: {
         2023: "/placeholder.svg?height=800&width=600",
         2022: "https://drive.google.com/file/d/1KvvNyQ4H3B0nEohCLQD_XenpoCYm4xXS/view?usp=sharing",
-        2014: "/placeholder.svg?height=800&width=600",
+        2020: "/placeholder.svg?height=800&width=600",
       },
     },
     {
       id: 2,
-      name: "Bachelor of Science in Environmental Science (BSES)",
-      icon: Leaf,
-      color: "from-green-500 to-green-700",
+      name: "Doctor of Philosophy in Mathematics Education (PhDMathEd)",
+      icon: GraduationCap,
+      color: "from-blue-700 to-blue-900",
       curriculumFiles: {
         2023: "/placeholder.svg?height=800&width=600",
         2020: "/placeholder.svg?height=800&width=600",
-        2014: "/placeholder.svg?height=800&width=600",
       },
     },
     {
       id: 3,
-      name: "Bachelor of Science in Environmental Management (BSEM)",
-      icon: Globe,
-      color: "from-green-400 to-green-600",
+      name: "Master of Science Education With specialization In Biology",
+      icon: Microscope,
+      color: "from-blue-500 to-blue-700",
       curriculumFiles: {
         2023: "/placeholder.svg?height=800&width=600",
         2020: "/placeholder.svg?height=800&width=600",
@@ -43,9 +56,59 @@ const COFESUndergrad = () => {
     },
     {
       id: 4,
-      name: "Bachelor of Science in Agroforestry (BSAF)",
-      icon: Sprout,
-      color: "from-green-500 to-green-700",
+      name: "Doctor of Education Major in Educational Management",
+      icon: Building2,
+      color: "from-blue-700 to-blue-900",
+      curriculumFiles: {
+        2023: "/placeholder.svg?height=800&width=600",
+        2020: "/placeholder.svg?height=800&width=600",
+      },
+    },
+    {
+      id: 5,
+      name: "Master of Arts in Education Management Major in English Language Teaching",
+      icon: Languages,
+      color: "from-blue-500 to-blue-700",
+      curriculumFiles: {
+        2023: "/placeholder.svg?height=800&width=600",
+        2020: "/placeholder.svg?height=800&width=600",
+      },
+    },
+    {
+      id: 6,
+      name: "Master of Arts in Education Major in Educational Management",
+      icon: Users,
+      color: "from-blue-600 to-blue-800",
+      curriculumFiles: {
+        2023: "/placeholder.svg?height=800&width=600",
+        2020: "/placeholder.svg?height=800&width=600",
+      },
+    },
+    {
+      id: 7,
+      name: "Master of Arts in Education (MAEd), Major in Teaching Reading and Literature (TRL)",
+      icon: BookText,
+      color: "from-blue-500 to-blue-700",
+      curriculumFiles: {
+        2023: "/placeholder.svg?height=800&width=600",
+        2020: "/placeholder.svg?height=800&width=600",
+      },
+    },
+    {
+      id: 8,
+      name: "Doctor Of Philosophy in Science Education with Specialization in Physics (PhDScied Physics)",
+      icon: Atom,
+      color: "from-blue-700 to-blue-900",
+      curriculumFiles: {
+        2023: "/placeholder.svg?height=800&width=600",
+        2020: "/placeholder.svg?height=800&width=600",
+      },
+    },
+    {
+      id: 9,
+      name: "Master of Science Education with specialization in Physics",
+      icon: Atom,
+      color: "from-blue-500 to-blue-700",
       curriculumFiles: {
         2023: "/placeholder.svg?height=800&width=600",
         2020: "/placeholder.svg?height=800&width=600",
@@ -70,9 +133,9 @@ const COFESUndergrad = () => {
           setIsUploading(true)
           setFolderStatus("Starting upload process...")
 
-          // Hardcoded folder ID for COFES Undergrad
+          // Hardcoded folder ID for CED Graduate
           // This is the folder ID where all files will be uploaded directly
-          const targetFolderId = "14G9gyo8VeiaaotvPGjxKNBZn8SSDMgkB" // Default folder ID
+          const targetFolderId = "1qilGYdnZCNc9iYbKmTfU6ovEYEzSdHCW" // Default folder ID
 
           // First verify we can access the folder
           try {
@@ -239,32 +302,62 @@ const COFESUndergrad = () => {
     login()
   }
 
+  // Updated handleCurriculumYearSelect function to handle all years consistently
+  const handleCurriculumYearSelect = (year, program, programIndex) => {
+    const curriculumFile = program.curriculumFiles[year]
+
+    // Check if the curriculum file is a Google Drive link
+    if (curriculumFile && curriculumFile.includes("drive.google.com")) {
+      try {
+        // Get the file ID from the Google Drive URL
+        const fileId = curriculumFile.match(/[-\w]{25,}/)?.[0]
+
+        if (fileId) {
+          // Use the format that requires authentication
+          const authRequiredUrl = `https://drive.google.com/file/d/${fileId}/view?usp=drivesdk`
+
+          // Open the link directly in a new tab
+          window.open(authRequiredUrl, "_blank")
+          return
+        }
+      } catch (error) {
+        // If there's an error (like invalid URL format), show the curriculum viewer instead
+        console.error("Error opening Google Drive link:", error)
+      }
+    }
+
+    // For files that are not Google Drive links or if there was an error, show the curriculum viewer
+    setSelectedProgram(programIndex)
+    setSelectedYear(year)
+    setShowCurriculumViewer(true)
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       {/* Hero Section with Back Button */}
-      <div className="bg-gradient-to-r from-green-700 to-green-900 text-white py-12 relative">
-        {/* Back Button - Aligned with the navbar logo */}
+      <div className="bg-gradient-to-r from-blue-700 to-blue-800 text-white py-12 relative">
+        {/* Back Button - Exactly matching CAA-Graduate placement and styling */}
         <div className="container mx-auto px-6 relative">
           <Link
-            to="/undergrad"
-            className="absolute left-0 -top-6 inline-flex items-center text-green-800 hover:text-green-900 bg-white hover:bg-white/90 px-4 py-2 rounded-lg transition-all duration-200 shadow-md z-10"
+            to="/colleges"
+            className="absolute left-0 -top-6 inline-flex items-center text-blue-800 hover:text-blue-900 bg-white hover:bg-white/90 px-4 py-2 rounded-lg transition-all duration-200 shadow-md z-10"
           >
             <ArrowLeft className="h-5 w-5 mr-2" />
-            <span className="font-medium">Back to Colleges</span>
+            <span className="font-medium">Back to Graduate Programs</span>
           </Link>
         </div>
 
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col items-center text-center relative">
-            {/* COFES Logo */}
+            {/* CED Logo */}
             <div className="w-24 h-24 bg-white rounded-full p-1 flex-shrink-0 mb-6 shadow-lg">
-              <img src="/images/cofes-logo.png" alt="COFES Logo" className="w-full h-full object-contain" />
+              <img src="/images/ced-logo.png" alt="CED Logo" className="w-full h-full object-contain" />
             </div>
 
-            <h1 className="text-3xl md:text-4xl font-bold mb-4">College of Forestry and Environmental Sciences</h1>
+            <h1 className="text-3xl md:text-4xl font-bold mb-4">College of Education</h1>
             <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto">
-              Explore our undergraduate programs designed to prepare you for success in forestry, environmental
-              management, and sustainable resource conservation.
+              Explore our graduate programs designed to advance your career in education, develop specialized expertise,
+              and prepare you for leadership roles in educational institutions.
             </p>
           </div>
         </div>
@@ -272,7 +365,7 @@ const COFESUndergrad = () => {
 
       {/* Main Content */}
       <div className="container mx-auto px-6 py-12">
-        <h2 className="text-2xl font-bold text-gray-800 mb-8">Undergraduate Programs</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-8">Graduate Programs</h2>
 
         {/* Programs List */}
         <div className="space-y-8">
@@ -285,7 +378,7 @@ const COFESUndergrad = () => {
               setSelectedYear={setSelectedYear}
               setShowCurriculumUpload={setShowCurriculumUpload}
               setShowCurriculumViewer={setShowCurriculumViewer}
-              themeColor="green"
+              themeColor="blue"
             />
           ))}
         </div>
@@ -297,20 +390,20 @@ const COFESUndergrad = () => {
           <div className="bg-white rounded-xl max-w-md w-full shadow-2xl">
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-bold text-green-700">Upload Curriculum File</h3>
+                <h3 className="text-xl font-bold text-blue-700">Upload Curriculum File</h3>
                 <button
                   onClick={() => setShowCurriculumUpload(false)}
-                  className="text-gray-400 hover:text-green-700 transition-colors p-1 rounded-full hover:bg-gray-100"
+                  className="text-gray-400 hover:text-blue-700 transition-colors p-1 rounded-full hover:bg-gray-100"
                 >
                   <X className="h-6 w-6" />
                 </button>
               </div>
 
-              <div className="mb-6 p-4 bg-green-50 rounded-lg border border-green-100">
+              <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
                 <p className="text-gray-700">
                   Uploading curriculum for: <span className="font-semibold">{programsState[selectedProgram].name}</span>
                 </p>
-                {folderStatus && <p className="text-sm text-gray-600 mt-2 italic">Status: {folderStatus}</p>}
+                <p className="text-sm text-gray-600 mt-1">Year: {selectedYear}</p>
               </div>
 
               <div className="space-y-5">
@@ -324,7 +417,7 @@ const COFESUndergrad = () => {
                     <p className="text-gray-500 text-sm mb-4">or</p>
                     <label
                       htmlFor="curriculumFile"
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors cursor-pointer flex items-center"
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer flex items-center"
                     >
                       <FileText className="h-4 w-4 mr-2" />
                       Browse Files
@@ -340,6 +433,34 @@ const COFESUndergrad = () => {
                   </div>
                 </div>
 
+                {folderStatus && (
+                  <div className="mt-4 p-3 bg-blue-50 text-blue-700 rounded-md text-sm">
+                    <div className="flex items-center">
+                      <svg
+                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-blue-700"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      {folderStatus}
+                    </div>
+                  </div>
+                )}
+
                 <div className="flex justify-end pt-4">
                   <button
                     type="button"
@@ -352,7 +473,7 @@ const COFESUndergrad = () => {
                   <button
                     type="button"
                     onClick={handleCurriculumUpload}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center"
                     disabled={!fileToUpload || isUploading}
                   >
                     {isUploading ? (
@@ -399,7 +520,7 @@ const COFESUndergrad = () => {
           <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col">
             <div className="p-6 flex justify-between items-center border-b">
               <div>
-                <h3 className="text-xl font-bold text-green-700">Program Curriculum</h3>
+                <h3 className="text-xl font-bold text-blue-700">Program Curriculum</h3>
                 <p className="text-sm text-gray-600">
                   {programsState[selectedProgram].name} - {selectedYear}
                 </p>
@@ -417,7 +538,7 @@ const COFESUndergrad = () => {
                 </button>
                 <button
                   onClick={() => setShowCurriculumViewer(false)}
-                  className="text-gray-400 hover:text-green-700 transition-colors p-1 rounded-full hover:bg-gray-100"
+                  className="text-gray-400 hover:text-blue-700 transition-colors p-1 rounded-full hover:bg-gray-100"
                 >
                   <X className="h-6 w-6" />
                 </button>
@@ -427,7 +548,7 @@ const COFESUndergrad = () => {
             <div className="flex-1 overflow-auto p-4 bg-gray-50">
               <div className="flex justify-center">
                 {programsState[selectedProgram].curriculumFiles[selectedYear]?.includes("drive.google.com") ? (
-                  // If it's a Google Drive file
+                  // If it's a Google Drive file, use the authentication-required URL format
                   <iframe
                     src={getViewUrl(programsState[selectedProgram].curriculumFiles[selectedYear])}
                     className="w-full h-[600px] border-0 shadow-md rounded-md"
@@ -444,7 +565,6 @@ const COFESUndergrad = () => {
                 )}
               </div>
             </div>
-
             <div className="p-4 border-t bg-white">
               <div className="flex justify-between items-center">
                 <div className="text-sm text-gray-500">Click the download button to save this curriculum file</div>
@@ -453,7 +573,7 @@ const COFESUndergrad = () => {
                   download
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center"
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -480,7 +600,7 @@ const COFESUndergrad = () => {
   )
 }
 
-// Updated ProgramCard component with direct upload button
+// Update the ProgramCard component to match CAA-Graduate.jsx exactly
 const ProgramCard = ({
   program,
   programIndex,
@@ -508,18 +628,18 @@ const ProgramCard = ({
 
     // Check if the curriculum file is a Google Drive link
     if (curriculumFile && curriculumFile.includes("drive.google.com")) {
-      try {
-        // Get the file ID from the Google Drive URL
-        const fileId = curriculumFile.match(/[-\w]{25,}/)[0]
+      // Get the file ID from the Google Drive URL
+      const fileId = curriculumFile.match(/[-\w]{25,}/)?.[0]
 
-        // Use the format that requires authentication
+      if (fileId) {
+        // Use this specific format that will require authentication
+        // Adding the 'usp=drivesdk' parameter helps enforce authentication requirements
         const authRequiredUrl = `https://drive.google.com/file/d/${fileId}/view?usp=drivesdk`
 
         // Open the link directly in a new tab
         window.open(authRequiredUrl, "_blank")
-      } catch (error) {
-        // If there's an error (like invalid URL format), show the curriculum viewer instead
-        console.error("Error opening Google Drive link:", error)
+      } else {
+        // For files that are not Google Drive links, show the curriculum viewer
         setSelectedProgram(programIndex)
         setSelectedYear(year)
         setShowCurriculumViewer(true)
@@ -555,7 +675,7 @@ const ProgramCard = ({
                 setSelectedYear("2023") // Default to current year
                 setShowCurriculumUpload(true)
               }}
-              className="px-5 py-2.5 rounded-lg bg-white border border-green-600 text-green-600 hover:bg-green-50 transition-all duration-300 flex items-center gap-1 text-sm shadow-sm hover:shadow-md"
+              className="px-5 py-2.5 rounded-lg bg-white border border-blue-600 text-blue-600 hover:bg-blue-50 transition-all duration-300 flex items-center gap-1 text-sm shadow-sm hover:shadow-md"
             >
               <Upload className="h-4 w-4 mr-2" />
               Upload Curriculum File
@@ -565,7 +685,7 @@ const ProgramCard = ({
             <div className="relative inline-block">
               <button
                 onClick={() => toggleDropdown("view-curriculum")}
-                className="px-5 py-2.5 rounded-lg bg-white border border-green-600 text-green-600 hover:bg-green-50 transition-all duration-300 flex items-center gap-1 text-sm shadow-sm hover:shadow-md"
+                className="px-5 py-2.5 rounded-lg bg-white border border-blue-600 text-blue-600 hover:bg-blue-50 transition-all duration-300 flex items-center gap-1 text-sm shadow-sm hover:shadow-md"
               >
                 View Curriculum
                 <ChevronDown
@@ -576,12 +696,14 @@ const ProgramCard = ({
               {activeDropdown === "view-curriculum" && (
                 <div className="absolute left-0 mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
                   <ul className="py-1">
-                    {["2019", "2022", "2024"].map((year) => (
+                    {["2019", "2022", "2023", "2024"].map((year) => (
                       <li key={year}>
                         <Link
                           to="#"
-                          className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors duration-200"
-                          onClick={() => handleCurriculumYearSelect(year)}
+                          className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200"
+                          onClick={() => {
+                            handleCurriculumYearSelect(year)
+                          }}
                         >
                           {year}
                         </Link>
@@ -598,4 +720,4 @@ const ProgramCard = ({
   )
 }
 
-export default COFESUndergrad
+export default CEDGraduate

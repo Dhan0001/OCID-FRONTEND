@@ -2,12 +2,17 @@
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import React from "react"
-import CAA from "./assets/pages/CAA"
+
 import Navbar from "./assets/components/Navbar"
 import Footer from "./assets/components/Footer"
 import Home from "./assets/pages/Home"
 import Colleges from "./assets/pages/Colleges"
-import CCIS from "./assets/pages/CCIS"
+import CCISGraduate from "./assets/pages/CCIS-Graduate"
+import CAAGraduate from "./assets/pages/CAA-Graduate"
+import CEDGraduate from "./assets/pages/CED-Graduate"
+import CMNSGraduate from "./assets/pages/CMNS-Graduate"
+import COFESGraduate from "./assets/pages/COFES-Graduate"
+import CHASSGraduate from "./assets/pages/CHASS-Graduate"
 import Undergrad from "./assets/pages/Undergrad"
 import CCISUndergrad from "./assets/pages/CCIS-Undergrad"
 import CEDUndergrad from "./assets/pages/CED-Undergrad"
@@ -21,6 +26,7 @@ import "./App.css"
 
 // Import the Google OAuth provider
 import { GoogleOAuthProvider } from "@react-oauth/google"
+
 
 // Simple redirect component
 function CollegesRedirect() {
@@ -47,22 +53,24 @@ function App() {
              
 
               {/* Graduate College Routes */}
-              <Route path="/ccis" element={<CCIS />} />
-              <Route path="/caa" element={<CAA />} />
-             
+              <Route path="colleges/ccis-graduate" element={<CCISGraduate />} />
+              <Route path="colleges/caa-graduate" element={<CAAGraduate />} />
+              <Route path="colleges/ced-graduate" element={<CEDGraduate />} />
+              <Route path="colleges/cmns-graduate" element={<CMNSGraduate />} />
+              <Route path="colleges/cofes-graduate" element={<COFESGraduate />} />
+              <Route path="colleges/chass-graduate" element={<CHASSGraduate />} />
              
              
             
 
-              {/* Undergraduate College Routes */}
-              <Route path="/ccis-undergrad" element={<CCISUndergrad />} />
-              <Route path="/caa-undergrad" element={<CAAUndergrad />} />
-              <Route path="/ced-undergrad" element={<CEDUndergrad />} />
-              <Route path="/cofes-undergrad" element={<COFESUndergrad />} />
-              <Route path="/chass-undergrad" element={<CHASSUndergrad />} />
-              <Route path="/cegs-undergrad" element={<CEGSUndergrad />} />
-              <Route path="/cmns-undergrad" element={<CMNSUndergrad />} />
-
+               {/* Undergraduate College Routes */}
+               <Route path="/undergrad/ccis-undergrad" element={<CCISUndergrad />} />
+              <Route path="/undergrad/caa-undergrad" element={<CAAUndergrad />} />
+              <Route path="/undergrad/ced-undergrad" element={<CEDUndergrad />} />
+              <Route path="/undergrad/cofes-undergrad" element={<COFESUndergrad />} />
+              <Route path="/undergrad/chass-undergrad" element={<CHASSUndergrad />} />
+              <Route path="/undergrad/cegs-undergrad" element={<CEGSUndergrad />} />
+              <Route path="/undergrad/cmns-undergrad" element={<CMNSUndergrad />} />
               {/* Redirect for any other paths */}
               <Route path="*" element={<Navigate to="/" replace />} />
 

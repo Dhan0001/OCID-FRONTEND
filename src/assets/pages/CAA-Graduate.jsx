@@ -3,51 +3,20 @@
 import { Link } from "react-router-dom"
 import { useState } from "react"
 import { useGoogleLogin } from "@react-oauth/google"
-import { ChevronDown, X, Upload, FileText, TreePine, Leaf, Globe, Sprout, ArrowLeft } from "lucide-react"
+import { ChevronDown, X, Upload, FileText, Wheat, Layers, ArrowLeft } from "lucide-react"
 import { getViewUrl } from "../utils/googleDriveUtils"
 
-const COFESUndergrad = () => {
-  // Undergraduate programs for COFES with updated icons
+const CAAGraduate = () => {
+  // Graduate programs for CAA
   const programs = [
     {
       id: 1,
-      name: "Bachelor of Science in Forestry (BSF)",
-      icon: TreePine,
+      name: "Master of Science in Crop Science",
+      icon: Wheat,
       color: "from-green-600 to-green-800",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2022: "https://drive.google.com/file/d/1KvvNyQ4H3B0nEohCLQD_XenpoCYm4xXS/view?usp=sharing",
-        2014: "/placeholder.svg?height=800&width=600",
-      },
-    },
-    {
-      id: 2,
-      name: "Bachelor of Science in Environmental Science (BSES)",
-      icon: Leaf,
-      color: "from-green-500 to-green-700",
-      curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
-        2014: "/placeholder.svg?height=800&width=600",
-      },
-    },
-    {
-      id: 3,
-      name: "Bachelor of Science in Environmental Management (BSEM)",
-      icon: Globe,
-      color: "from-green-400 to-green-600",
-      curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
-      },
-    },
-    {
-      id: 4,
-      name: "Bachelor of Science in Agroforestry (BSAF)",
-      icon: Sprout,
-      color: "from-green-500 to-green-700",
-      curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1KvvNyQ4H3B0nEohCLQD_XenpoCYm4xXS/view?usp=sharing",
+        2022: "https://drive.google.com/file/d/1mFaajZ5nfVn5sMBrfTDsP5if_oJB8DTz/view?usp=sharing",
         2020: "/placeholder.svg?height=800&width=600",
       },
     },
@@ -60,6 +29,7 @@ const COFESUndergrad = () => {
   const [showCurriculumViewer, setShowCurriculumViewer] = useState(false)
   const [fileToUpload, setFileToUpload] = useState(null)
   const [isUploading, setIsUploading] = useState(false)
+  const [activeDropdown, setActiveDropdown] = useState(null)
   const [folderStatus, setFolderStatus] = useState("")
 
   // Google login hook for file upload
@@ -70,9 +40,9 @@ const COFESUndergrad = () => {
           setIsUploading(true)
           setFolderStatus("Starting upload process...")
 
-          // Hardcoded folder ID for COFES Undergrad
+          // Hardcoded folder ID for CAA Graduate
           // This is the folder ID where all files will be uploaded directly
-          const targetFolderId = "14G9gyo8VeiaaotvPGjxKNBZn8SSDMgkB" // Default folder ID
+          const targetFolderId = "1AdLRd6wuhirbZlaermpLHOXfKpb94tL7" // Default folder ID
 
           // First verify we can access the folder
           try {
@@ -242,29 +212,29 @@ const COFESUndergrad = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       {/* Hero Section with Back Button */}
-      <div className="bg-gradient-to-r from-green-700 to-green-900 text-white py-12 relative">
-        {/* Back Button - Aligned with the navbar logo */}
+      <div className="bg-gradient-to-r from-green-700 to-green-800 text-white py-12 relative">
+        {/* Back Button - Exactly matching CCIS-Undergrad placement and styling */}
         <div className="container mx-auto px-6 relative">
           <Link
-            to="/undergrad"
+            to="/colleges"
             className="absolute left-0 -top-6 inline-flex items-center text-green-800 hover:text-green-900 bg-white hover:bg-white/90 px-4 py-2 rounded-lg transition-all duration-200 shadow-md z-10"
           >
             <ArrowLeft className="h-5 w-5 mr-2" />
-            <span className="font-medium">Back to Colleges</span>
+            <span className="font-medium">Back to Graduate Programs</span>
           </Link>
         </div>
 
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col items-center text-center relative">
-            {/* COFES Logo */}
+            {/* CAA Logo */}
             <div className="w-24 h-24 bg-white rounded-full p-1 flex-shrink-0 mb-6 shadow-lg">
-              <img src="/images/cofes-logo.png" alt="COFES Logo" className="w-full h-full object-contain" />
+              <img src="/images/caa-logo.png" alt="CAA Logo" className="w-full h-full object-contain" />
             </div>
 
-            <h1 className="text-3xl md:text-4xl font-bold mb-4">College of Forestry and Environmental Sciences</h1>
+            <h1 className="text-3xl md:text-4xl font-bold mb-4">College of Agriculture and Agri-Industries</h1>
             <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto">
-              Explore our undergraduate programs designed to prepare you for success in forestry, environmental
-              management, and sustainable resource conservation.
+              Explore our graduate programs designed to prepare you for advanced careers in agricultural sciences,
+              sustainable farming practices, and agricultural research.
             </p>
           </div>
         </div>
@@ -272,7 +242,7 @@ const COFESUndergrad = () => {
 
       {/* Main Content */}
       <div className="container mx-auto px-6 py-12">
-        <h2 className="text-2xl font-bold text-gray-800 mb-8">Undergraduate Programs</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-8">Graduate Programs</h2>
 
         {/* Programs List */}
         <div className="space-y-8">
@@ -285,7 +255,6 @@ const COFESUndergrad = () => {
               setSelectedYear={setSelectedYear}
               setShowCurriculumUpload={setShowCurriculumUpload}
               setShowCurriculumViewer={setShowCurriculumViewer}
-              themeColor="green"
             />
           ))}
         </div>
@@ -406,16 +375,6 @@ const COFESUndergrad = () => {
               </div>
               <div className="flex items-center gap-3">
                 <button
-                  onClick={() => {
-                    setShowCurriculumUpload(true)
-                    setShowCurriculumViewer(false)
-                  }}
-                  className="text-blue-600 hover:text-blue-800 text-sm flex items-center"
-                >
-                  <Upload className="h-4 w-4 mr-1" />
-                  Upload New
-                </button>
-                <button
                   onClick={() => setShowCurriculumViewer(false)}
                   className="text-gray-400 hover:text-green-700 transition-colors p-1 rounded-full hover:bg-gray-100"
                 >
@@ -427,7 +386,7 @@ const COFESUndergrad = () => {
             <div className="flex-1 overflow-auto p-4 bg-gray-50">
               <div className="flex justify-center">
                 {programsState[selectedProgram].curriculumFiles[selectedYear]?.includes("drive.google.com") ? (
-                  // If it's a Google Drive file
+                  // If it's a Google Drive file, use the authentication-required URL format
                   <iframe
                     src={getViewUrl(programsState[selectedProgram].curriculumFiles[selectedYear])}
                     className="w-full h-[600px] border-0 shadow-md rounded-md"
@@ -444,35 +403,6 @@ const COFESUndergrad = () => {
                 )}
               </div>
             </div>
-
-            <div className="p-4 border-t bg-white">
-              <div className="flex justify-between items-center">
-                <div className="text-sm text-gray-500">Click the download button to save this curriculum file</div>
-                <a
-                  href={programsState[selectedProgram].curriculumFiles[selectedYear]}
-                  download
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 mr-2"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                    />
-                  </svg>
-                  Download
-                </a>
-              </div>
-            </div>
           </div>
         </div>
       )}
@@ -480,7 +410,7 @@ const COFESUndergrad = () => {
   )
 }
 
-// Updated ProgramCard component with direct upload button
+// Update the ProgramCard component to ensure links require authentication
 const ProgramCard = ({
   program,
   programIndex,
@@ -488,10 +418,10 @@ const ProgramCard = ({
   setSelectedYear,
   setShowCurriculumUpload,
   setShowCurriculumViewer,
-  themeColor,
 }) => {
   const [activeDropdown, setActiveDropdown] = useState(null)
-  const Icon = program.icon
+  // No description state needed
+  const Icon = program.icon || Layers
 
   // Toggle dropdown visibility
   const toggleDropdown = (dropdown) => {
@@ -503,23 +433,23 @@ const ProgramCard = ({
   }
 
   // Updated handleCurriculumYearSelect function to handle all years consistently
-  const handleCurriculumYearSelect = (year) => {
+  const handleCurriculumYearSelect = (year, programIndex) => {
     const curriculumFile = program.curriculumFiles[year]
 
     // Check if the curriculum file is a Google Drive link
     if (curriculumFile && curriculumFile.includes("drive.google.com")) {
-      try {
-        // Get the file ID from the Google Drive URL
-        const fileId = curriculumFile.match(/[-\w]{25,}/)[0]
+      // Get the file ID from the Google Drive URL
+      const fileId = curriculumFile.match(/[-\w]{25,}/)?.[0]
 
-        // Use the format that requires authentication
+      if (fileId) {
+        // Use this specific format that will require authentication
+        // Adding the 'usp=drivesdk' parameter helps enforce authentication requirements
         const authRequiredUrl = `https://drive.google.com/file/d/${fileId}/view?usp=drivesdk`
 
         // Open the link directly in a new tab
         window.open(authRequiredUrl, "_blank")
-      } catch (error) {
-        // If there's an error (like invalid URL format), show the curriculum viewer instead
-        console.error("Error opening Google Drive link:", error)
+      } else {
+        // For files that are not Google Drive links, show the curriculum viewer
         setSelectedProgram(programIndex)
         setSelectedYear(year)
         setShowCurriculumViewer(true)
@@ -576,12 +506,14 @@ const ProgramCard = ({
               {activeDropdown === "view-curriculum" && (
                 <div className="absolute left-0 mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
                   <ul className="py-1">
-                    {["2019", "2022", "2024"].map((year) => (
+                    {["2019", "2022", "2023", "2024"].map((year) => (
                       <li key={year}>
                         <Link
                           to="#"
                           className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors duration-200"
-                          onClick={() => handleCurriculumYearSelect(year)}
+                          onClick={() => {
+                            handleCurriculumYearSelect(year, programIndex)
+                          }}
                         >
                           {year}
                         </Link>
@@ -598,4 +530,4 @@ const ProgramCard = ({
   )
 }
 
-export default COFESUndergrad
+export default CAAGraduate
