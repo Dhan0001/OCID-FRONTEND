@@ -49,7 +49,7 @@ const Colleges = () => {
           </div>
           <button
             className="text-gray-500 text-2xl px-0 hover:text-green-700 transition-colors duration-200"
-            onClick={() => window.location.assign("/undergrad")}
+            onClick={() => (window.location.href = "/undergrad")}
           >
             Under-Graduate
           </button>
