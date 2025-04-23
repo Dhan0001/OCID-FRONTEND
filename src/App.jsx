@@ -31,7 +31,8 @@ import { GoogleOAuthProvider } from "@react-oauth/google"
 // Simple redirect component
 function CollegesRedirect() {
   React.useEffect(() => {
-    window.location.href = "/graduate"
+    window.location.href = "/graduate",
+    window.location.href = "/undergrad"
   }, [])
   return <div>Redirecting...</div>
 }
