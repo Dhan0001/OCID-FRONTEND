@@ -1,30 +1,22 @@
 const Home = () => {
   return (
     <div className="flex flex-col w-full">
-      {/* Hero Section with Responsive OCID Banner */}
-      <div className="relative w-full">
-        {/* Desktop Banner (hidden on small screens) */}
-        <img
-          src="/images/OCID-Banner.jpg"
-          alt="OCID Banner"
-          className="w-full h-auto hidden md:block"
-          loading="eager"
-        />
-
-        {/* Mobile Banner (shown only on small screens) */}
-        <div className="md:hidden bg-green-700 px-4 py-8">
-          <div className="flex flex-col items-center mb-4">
-            <img src="/images/logos/csu-logo.png" alt="Caraga State University Logo" className="h-16 mb-4" />
-            <h1 className="text-5xl font-bold text-white text-center mb-2">OCID</h1>
-            <p className="text-yellow-300 italic text-center text-lg mb-4">
-              Office of Curriculum and Instruction Development
-            </p>
+      {/* Hero Section with Statue Background */}
+      <div className="relative w-full h-[300px] bg-green-700 flex items-center">
+        <div className="absolute inset-0 bg-[url('/placeholder.svg?height=400&width=940')] bg-right bg-no-repeat opacity-30"></div>
+        <div className="container mx-auto px-6 z-10">
+          <div className="max-w-2xl">
+            <h1 className="text-4xl md:text-5xl font-bold text-white leading-tight tracking-wide">
+              OFFICE OF CURRICULUM AND
+              <br />
+              INSTRUCTION DEVELOPMENT
+            </h1>
+            <div className="mt-8">
+              <button className="px-6 py-2 bg-white text-green-700 font-medium hover:bg-gray-100 transition-colors duration-300 uppercase text-sm">
+                READ MORE
+              </button>
+            </div>
           </div>
-          <p className="text-white text-sm text-center">
-            The Office of Curriculum and Instruction Development (OCID) convened partners from education, government,
-            and private institutions on May 7, 2024 to share developments about the university's programs and gather
-            inputs to adapt to current demands.
-          </p>
         </div>
       </div>
 

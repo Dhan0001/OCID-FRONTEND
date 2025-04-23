@@ -2,6 +2,7 @@
 
 import { Link, useLocation } from "react-router-dom"
 import { useState } from "react"
+import { Menu } from "lucide-react"
 
 const Navbar = () => {
   const location = useLocation()
@@ -31,9 +32,9 @@ const Navbar = () => {
       <div className="container mx-auto px-6 py-3 flex items-center justify-between">
         {/* CSU Logo */}
         <Link to="/" className="flex-shrink-0">
-          <div className="h-[60px] w-[120px] flex items-center">
+          <div className="h-[60px] w-[200px] flex items-center">
             <img
-              src="/images/csu-logo.png"
+              src="/images/logos/csu-logo.png"
               alt="Caraga State University Logo"
               className="h-full object-contain"
             />
@@ -42,15 +43,7 @@ const Navbar = () => {
 
         {/* Mobile menu button */}
         <button className="md:hidden p-2 rounded-md text-gray-700" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
+          <Menu className="h-6 w-6" />
         </button>
 
         {/* Desktop navigation */}
@@ -66,7 +59,7 @@ const Navbar = () => {
             HOME
           </Link>
           <Link
-            to="/colleges"
+            to="/graduate"
             className={`font-medium uppercase ${
               isCollegeActive()
                 ? "text-green-700 font-bold border-b-2 border-green-700 pb-1"
@@ -74,6 +67,16 @@ const Navbar = () => {
             } transition-colors duration-200`}
           >
             COLLEGES
+          </Link>
+          <Link
+            to="/file-upload"
+            className={`font-medium uppercase ${
+              isActive("/file-upload")
+                ? "text-green-700 font-bold border-b-2 border-green-700 pb-1"
+                : "text-gray-600 hover:text-green-700"
+            } transition-colors duration-200`}
+          >
+            FILE UPLOAD
           </Link>
           <a
             href="https://www.carsu.edu.ph/?q=news/csu-introduces-programs-solicits-stakeholders%E2%80%99-input-innovative-curricula"
@@ -111,6 +114,17 @@ const Navbar = () => {
               >
                 COLLEGES
               </Link>
+              <Link
+                to="/file-upload"
+                className={`${
+                  isActive("/file-upload")
+                    ? "font-bold text-green-700 border-l-4 border-green-700 pl-2"
+                    : "text-gray-600 hover:text-green-700"
+                } transition-colors duration-200`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                FILE UPLOAD
+              </Link>
               <a
                 href="https://www.carsu.edu.ph/?q=news/csu-introduces-programs-solicits-stakeholders%E2%80%99-input-innovative-curricula"
                 className="text-gray-600 hover:text-green-700 transition-colors duration-200"
@@ -128,7 +142,7 @@ const Navbar = () => {
         <div id="ocidlogo" className="hidden md:block">
           <Link to="/">
             <div className="h-[60px] w-[120px] flex items-center justify-center">
-              <img src="/images/ocid-logo.png" alt="OCID Logo" className="h-full object-contain" />
+              <img src="/images/logos/ocid-logo.png" alt="OCID Logo" className="h-full object-contain" />
             </div>
           </Link>
         </div>
@@ -138,4 +152,3 @@ const Navbar = () => {
 }
 
 export default Navbar
-

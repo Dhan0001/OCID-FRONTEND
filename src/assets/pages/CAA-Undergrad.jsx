@@ -1,87 +1,48 @@
 "use client"
-
-import { Link } from "react-router-dom"
 import { useState } from "react"
 import { useGoogleLogin } from "@react-oauth/google"
-import {
-  ChevronDown,
-  X,
-  Upload,
-  FileText,
-  CreditCard,
-  Wheat,
-  Beef,
-  Bug,
-  Flower2,
-  Layers,
-  ArrowLeft,
-} from "lucide-react"
-import { getViewUrl } from "../utils/googleDriveUtils"
 
 const CAAUndergrad = () => {
   // Undergraduate programs for CAA
   const programs = [
     {
       id: 1,
-      name: "Bachelor of Science in Agriculture (BSA) major in Agriculture Economics",
-      icon: CreditCard,
-      color: "from-green-600 to-green-800",
+      name: "Bachelor of Science in Agriculture (BSA)",
       curriculumFiles: {
-        2023: "https://drive.google.com/file/d/1KvvNyQ4H3B0nEohCLQD_XenpoCYm4xXS/view?usp=sharing",
-        2022: "https://drive.google.com/file/d/1mFaajZ5nfVn5sMBrfTDsP5if_oJB8DTz/view?usp=sharing",
-        2014: "/placeholder.svg?height=800&width=600",
-        2005: "/placeholder.svg?height=800&width=600",
-        2003: "/placeholder.svg?height=800&width=600",
+        2023: "/placeholder.svg?height=800&width=600",
+        2022: "https://drive.google.com/file/d/1KvvNyQ4H3B0nEohCLQD_XenpoCYm4xXS/view?usp=sharing",
+        2020: "/placeholder.svg?height=800&width=600",
       },
     },
     {
       id: 2,
-      name: "Bachelor of Science in Agriculture (BSA) major in Agronomy",
-      icon: Wheat,
-      color: "from-green-500 to-green-700",
+      name: "Bachelor of Science in Agricultural Economics (BSAEC)",
       curriculumFiles: {
-        2023: "https://drive.google.com/file/d/1Vfv2M_ck5ktu4Ptty66dsHEUwiqeTRod/view?usp=sharing",
-        2019: "https://drive.google.com/file/d/1mFaajZ5nfVn5sMBrfTDsP5if_oJB8DTz/view?usp=sharing",
-        2014: "/placeholder.svg?height=800&width=600",
+        2023: "/placeholder.svg?height=800&width=600",
+        2020: "/placeholder.svg?height=800&width=600",
       },
     },
     {
       id: 3,
-      name: "Bachelor of Science in Agriculture (BSA) major in Animal Science",
-      icon: Beef,
-      color: "from-green-400 to-green-600",
+      name: "Bachelor of Science in Animal Science (BSAS)",
       curriculumFiles: {
-        2023: "https://drive.google.com/file/d/1Vfv2M_ck5ktu4Ptty66dsHEUwiqeTRod/view?usp=sharing",
+        2023: "/placeholder.svg?height=800&width=600",
         2020: "/placeholder.svg?height=800&width=600",
       },
     },
     {
       id: 4,
-      name: "Bachelor of Science in Agriculture (BSA) major in Crop Protection",
-      icon: Bug,
-      color: "from-green-500 to-green-700",
+      name: "Bachelor of Science in Development Communication (BSDC)",
       curriculumFiles: {
-        2023: "https://drive.google.com/file/d/1Vfv2M_ck5ktu4Ptty66dsHEUwiqeTRod/view?usp=sharing",
+        2023: "/placeholder.svg?height=800&width=600",
         2020: "/placeholder.svg?height=800&width=600",
       },
     },
     {
       id: 5,
-      name: "Bachelor of Science in Agriculture (BSA) major in Horticulture",
-      icon: Flower2,
-      color: "from-green-600 to-green-800",
+      name: "Bachelor of Science in Agribusiness (BSAB)",
       curriculumFiles: {
-        2023: "https://drive.google.com/file/d/1Vfv2M_ck5ktu4Ptty66dsHEUwiqeTRod/view?usp=sharing",
-        2020: "/placeholder.svg?height=800&width=600",
-      },
-    },
-    {
-      id: 6,
-      name: "Bachelor of Science in Agricultural (BSA) major in Soil Science",
-      icon: Layers,
-      color: "from-green-600 to-green-800",
-      curriculumFiles: {
-        2023: "https://drive.google.com/file/d/1Vfv2M_ck5ktu4Ptty66dsHEUwiqeTRod/view?usp=sharing",
+        2023: "/placeholder.svg?height=800&width=600",
         2020: "/placeholder.svg?height=800&width=600",
       },
     },
@@ -94,101 +55,9 @@ const CAAUndergrad = () => {
   const [showCurriculumViewer, setShowCurriculumViewer] = useState(false)
   const [fileToUpload, setFileToUpload] = useState(null)
   const [isUploading, setIsUploading] = useState(false)
-  const [activeDropdown, setActiveDropdown] = useState(null)
   const [folderStatus, setFolderStatus] = useState("")
-  // Add a new state variable to track the CAA-Undergrad folder ID
-  const [caaUndergradFolderId, setCaaUndergradFolderId] = useState(localStorage.getItem("caaUndergradFolderId") || "")
 
-  // Helper functions for folder management
-  const createSubfolder = async (folderName, parentFolderId, accessToken) => {
-    try {
-      const metadata = {
-        name: folderName,
-        mimeType: "application/vnd.google-apps.folder",
-        parents: [parentFolderId],
-      }
-
-      const response = await fetch("https://www.googleapis.com/drive/v3/files", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(metadata),
-      })
-
-      if (!response.ok) {
-        throw new Error(`Failed to create subfolder: ${response.statusText}`)
-      }
-
-      const folderData = await response.json()
-      return folderData.id
-    } catch (error) {
-      console.error("Error creating subfolder in Google Drive:", error)
-      throw error
-    }
-  }
-
-  const listFolders = async (parentFolderId, accessToken) => {
-    try {
-      const query = `'${parentFolderId}' in parents and mimeType='application/vnd.google-apps.folder'`
-      const response = await fetch(
-        `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&fields=files(id,name)`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      )
-
-      if (!response.ok) {
-        throw new Error(`Failed to list folders: ${response.statusText}`)
-      }
-
-      const data = await response.json()
-      return data.files || []
-    } catch (error) {
-      console.error("Error listing folders:", error)
-      return []
-    }
-  }
-
-  const checkFolderExists = async (folderId, accessToken) => {
-    try {
-      const response = await fetch(`https://www.googleapis.com/drive/v3/files/${folderId}?fields=id,name`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-
-      return response.ok
-    } catch (error) {
-      console.error("Error checking folder existence:", error)
-      return false
-    }
-  }
-
-  // Add a function to create the CAA-Undergrad folder if it doesn't exist
-  const createCaaUndergradFolder = async (accessToken) => {
-    try {
-      // For BSA Agriculture Economics program, use this specific folder ID
-      // This is the ID of the "BSA Agriculture Economics" folder
-      const bsaAgEconFolderId = "1NaRXSyrQODlgvdzkhl3m07TPvLY99qP-" // Replace with the actual folder ID
-
-      setFolderStatus("Using BSA Agriculture Economics folder directly")
-      console.log("Using BSA Agriculture Economics folder ID:", bsaAgEconFolderId)
-
-      return bsaAgEconFolderId
-    } catch (error) {
-      console.error("Error accessing folder:", error)
-      setFolderStatus("Error: " + error.message)
-      throw error
-    }
-  }
-
-  // Google login hook for file upload with the specific folder ID
+  // Google login hook for file upload
   const login = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       if (fileToUpload && selectedProgram !== null) {
@@ -196,9 +65,8 @@ const CAAUndergrad = () => {
           setIsUploading(true)
           setFolderStatus("Starting upload process...")
 
-          // Hardcoded folder ID for BSA Agriculture Economics
-          // This is the folder ID where all files will be uploaded directly
-          const targetFolderId = "1NaRXSyrQODlgvdzkhl3m07TPvLY99qP-" // Replace with actual folder ID
+          // Hardcoded folder ID for CAA Undergrad
+          const targetFolderId = "1qilGYdnZCNc9iYbKmTfU6ovEYEzSdHCW" // Replace with actual folder ID
 
           // First verify we can access the folder
           try {
@@ -228,7 +96,7 @@ const CAAUndergrad = () => {
           }
 
           // Simple direct upload approach
-          setFolderStatus("Uploading file...")
+          setFolderStatus("Creating file...")
 
           // Create file metadata
           const metadata = {
@@ -267,413 +135,3 @@ const CAAUndergrad = () => {
             {
               method: "PATCH",
               headers: {
-                Authorization: `Bearer ${tokenResponse.access_token}`,
-                "Content-Type": fileToUpload.type,
-              },
-              body: fileToUpload,
-            },
-          )
-
-          if (!contentResponse.ok) {
-            throw new Error(`Failed to upload file content: ${contentResponse.status} ${contentResponse.statusText}`)
-          }
-
-          setFolderStatus("Setting file permissions...")
-
-          // Step 3: Set permissions to make the file accessible via link
-          try {
-            const permissionResponse = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}/permissions`, {
-              method: "POST",
-              headers: {
-                Authorization: `Bearer ${tokenResponse.access_token}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                role: "reader",
-                type: "anyone",
-                allowFileDiscovery: false,
-              }),
-            })
-
-            if (!permissionResponse.ok) {
-              console.warn("Permission setting warning:", await permissionResponse.text())
-            }
-          } catch (permError) {
-            console.warn("Error setting permissions, but continuing:", permError)
-          }
-
-          // Step 4: Get the file's web view link
-          const getFileResponse = await fetch(
-            `https://www.googleapis.com/drive/v3/files/${fileId}?fields=webViewLink,name`,
-            {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${tokenResponse.access_token}`,
-              },
-            },
-          )
-
-          let fileLink = `https://drive.google.com/file/d/${fileId}/view?usp=sharing`
-
-          if (getFileResponse.ok) {
-            const fileDetails = await getFileResponse.json()
-            fileLink = fileDetails.webViewLink || fileLink
-          }
-
-          // Update program state with the Google Drive link
-          const updatedPrograms = [...programsState]
-          updatedPrograms[selectedProgram].curriculumFiles[selectedYear] = fileLink
-          setProgramsState(updatedPrograms)
-
-          setShowCurriculumUpload(false)
-          setFileToUpload(null)
-          setFolderStatus("")
-          alert("Curriculum file uploaded successfully to Google Drive!")
-        } catch (error) {
-          console.error("Upload error:", error)
-          alert(`Error uploading file: ${error.message}`)
-          setFolderStatus("")
-        } finally {
-          setIsUploading(false)
-        }
-      }
-    },
-    onError: (error) => {
-      console.log("Google Login Failed:", error)
-      alert("Google login failed. Please try again.")
-      setIsUploading(false)
-      setFolderStatus("")
-    },
-    scope: "https://www.googleapis.com/auth/drive.file",
-  })
-
-  // Handle file selection
-  const handleFileSelect = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setFileToUpload(e.target.files[0])
-    }
-  }
-
-  // Handle curriculum file upload
-  const handleCurriculumUpload = () => {
-    if (!fileToUpload) {
-      alert("Please select a file first")
-      return
-    }
-
-    // Trigger Google login which will then upload the file
-    login()
-  }
-
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
-      {/* Hero Section with Back Button */}
-      <div className="bg-green-700 text-white py-12 relative">
-        {/* Back Button */}
-        <div className="absolute top-0 left-0">
-          <Link to="/undergrad" className="inline-flex items-center bg-white text-green-700 px-4 py-2">
-            <ArrowLeft className="h-5 w-5 mr-2" />
-            <span className="font-medium">Back to Colleges</span>
-          </Link>
-        </div>
-
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col items-center text-center relative">
-            {/* CAA Logo */}
-            <div className="w-24 h-24 bg-white rounded-full p-1 flex-shrink-0 mb-6 shadow-lg">
-              <img src="/images/caa-logo.png" alt="CAA Logo" className="w-full h-full object-contain" />
-            </div>
-
-            <h1 className="text-3xl md:text-4xl font-bold mb-4">College of Agriculture and Agri-Industries</h1>
-            <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto">
-              Explore our undergraduate programs designed to prepare you for success in the fields of agriculture, food
-              technology, and sustainable farming practices.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="container mx-auto px-6 py-12">
-        <h2 className="text-2xl font-bold text-gray-800 mb-8">Undergraduate Programs</h2>
-
-        {/* Programs List */}
-        <div className="space-y-8">
-          {programsState.map((program, programIndex) => (
-            <ProgramCard
-              key={program.id}
-              program={program}
-              programIndex={programIndex}
-              setSelectedProgram={setSelectedProgram}
-              setSelectedYear={setSelectedYear}
-              setShowCurriculumUpload={setShowCurriculumUpload}
-              setShowCurriculumViewer={setShowCurriculumViewer}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Curriculum Upload Modal */}
-      {showCurriculumUpload && selectedProgram !== null && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-          <div className="bg-white rounded-xl max-w-md w-full shadow-2xl">
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-bold text-green-700">Upload Curriculum File</h3>
-                <button
-                  onClick={() => setShowCurriculumUpload(false)}
-                  className="text-gray-400 hover:text-green-700 transition-colors p-1 rounded-full hover:bg-gray-100"
-                >
-                  <X className="h-6 w-6" />
-                </button>
-              </div>
-
-              <div className="mb-6 p-4 bg-green-50 rounded-lg border border-green-100">
-                <p className="text-gray-700">
-                  Uploading curriculum for: <span className="font-semibold">{programsState[selectedProgram].name}</span>
-                </p>
-                {folderStatus && <p className="text-sm text-gray-600 mt-2 italic">Status: {folderStatus}</p>}
-              </div>
-
-              <div className="space-y-5">
-                {/* Curriculum File Upload */}
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                  <div className="flex flex-col items-center">
-                    <Upload className="h-12 w-12 text-gray-400 mb-3" />
-                    <p className="text-gray-700 font-medium mb-2">
-                      {fileToUpload ? fileToUpload.name : "Drag and drop your curriculum file here"}
-                    </p>
-                    <p className="text-gray-500 text-sm mb-4">or</p>
-                    <label
-                      htmlFor="curriculumFile"
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors cursor-pointer flex items-center"
-                    >
-                      <FileText className="h-4 w-4 mr-2" />
-                      Browse Files
-                    </label>
-                    <input
-                      type="file"
-                      id="curriculumFile"
-                      className="hidden"
-                      accept="image/*,.pdf"
-                      onChange={handleFileSelect}
-                    />
-                    <p className="mt-3 text-xs text-gray-500">Supported formats: JPG, PNG, PDF (max 10MB)</p>
-                  </div>
-                </div>
-
-                <div className="flex justify-end pt-4">
-                  <button
-                    type="button"
-                    onClick={() => setShowCurriculumUpload(false)}
-                    className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 mr-3 hover:bg-gray-50 transition-all"
-                    disabled={isUploading}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleCurriculumUpload}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center"
-                    disabled={!fileToUpload || isUploading}
-                  >
-                    {isUploading ? (
-                      <>
-                        <svg
-                          className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
-                        Uploading...
-                      </>
-                    ) : (
-                      <>
-                        <Upload className="h-4 w-4 mr-2" />
-                        Upload to Google Drive
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Curriculum Viewer Modal */}
-      {showCurriculumViewer && selectedProgram !== null && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-          <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col">
-            <div className="p-6 flex justify-between items-center border-b">
-              <div>
-                <h3 className="text-xl font-bold text-green-700">Program Curriculum</h3>
-                <p className="text-sm text-gray-600">
-                  {programsState[selectedProgram].name} - {selectedYear}
-                </p>
-              </div>
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => setShowCurriculumViewer(false)}
-                  className="text-gray-400 hover:text-green-700 transition-colors p-1 rounded-full hover:bg-gray-100"
-                >
-                  <X className="h-6 w-6" />
-                </button>
-              </div>
-            </div>
-
-            <div className="flex-1 overflow-auto p-4 bg-gray-50">
-              <div className="flex justify-center">
-                {programsState[selectedProgram].curriculumFiles[selectedYear]?.includes("drive.google.com") ? (
-                  // If it's a Google Drive file, use the authentication-required URL format
-                  <iframe
-                    src={getViewUrl(programsState[selectedProgram].curriculumFiles[selectedYear])}
-                    className="w-full h-[600px] border-0 shadow-md rounded-md"
-                    title={`${programsState[selectedProgram].name} Curriculum ${selectedYear}`}
-                    allowFullScreen
-                  />
-                ) : (
-                  // If it's a regular image or placeholder
-                  <img
-                    src={programsState[selectedProgram].curriculumFiles[selectedYear] || "/placeholder.svg"}
-                    alt={`${programsState[selectedProgram].name} Curriculum ${selectedYear}`}
-                    className="max-w-full h-auto shadow-md rounded-md"
-                  />
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
-
-// Update the ProgramCard component to ensure links require authentication
-const ProgramCard = ({
-  program,
-  programIndex,
-  setSelectedProgram,
-  setSelectedYear,
-  setShowCurriculumUpload,
-  setShowCurriculumViewer,
-}) => {
-  const [activeDropdown, setActiveDropdown] = useState(null)
-  // No description state needed
-  const Icon = program.icon || Layers
-
-  // Toggle dropdown visibility
-  const toggleDropdown = (dropdown) => {
-    if (activeDropdown === dropdown) {
-      setActiveDropdown(null)
-    } else {
-      setActiveDropdown(dropdown)
-    }
-  }
-
-  // Updated handleCurriculumYearSelect function to handle all years consistently
-  const handleCurriculumYearSelect = (year, programIndex) => {
-    const curriculumFile = program.curriculumFiles[year]
-
-    // Check if the curriculum file is a Google Drive link
-    if (curriculumFile && curriculumFile.includes("drive.google.com")) {
-      // Get the file ID from the Google Drive URL
-      const fileId = curriculumFile.match(/[-\w]{25,}/)[0]
-
-      // Use this specific format that will require authentication
-      // Adding the 'usp=drivesdk' parameter helps enforce authentication requirements
-      const authRequiredUrl = `https://drive.google.com/file/d/${fileId}/view?usp=drivesdk`
-
-      // Open the link directly in a new tab
-      window.open(authRequiredUrl, "_blank")
-    } else {
-      // For files that are not Google Drive links, show the curriculum viewer
-      setSelectedProgram(programIndex)
-      setSelectedYear(year)
-      setShowCurriculumViewer(true)
-    }
-
-    setActiveDropdown(null)
-  }
-
-  return (
-    <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-visible border border-gray-100">
-      <div className="p-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="flex items-center">
-            <div
-              className={`flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br ${program.color} flex items-center justify-center text-white shadow-md mr-4`}
-            >
-              <Icon className="h-6 w-6" />
-            </div>
-            <h3 className="text-xl font-bold text-gray-800">{program.name}</h3>
-          </div>
-
-          <div className="flex flex-wrap gap-3">
-            {/* Upload Curriculum File Button - Direct action, no dropdown */}
-            <button
-              onClick={() => {
-                setSelectedProgram(programIndex)
-                setSelectedYear("2023") // Default to current year
-                setShowCurriculumUpload(true)
-              }}
-              className="px-5 py-2.5 rounded-lg bg-white border border-green-600 text-green-600 hover:bg-green-50 transition-all duration-300 flex items-center gap-1 text-sm shadow-sm hover:shadow-md"
-            >
-              <Upload className="h-4 w-4 mr-2" />
-              Upload Curriculum File
-            </button>
-
-            {/* View Curriculum Dropdown */}
-            <div className="relative inline-block">
-              <button
-                onClick={() => toggleDropdown("view-curriculum")}
-                className="px-5 py-2.5 rounded-lg bg-white border border-green-600 text-green-600 hover:bg-green-50 transition-all duration-300 flex items-center gap-1 text-sm shadow-sm hover:shadow-md"
-              >
-                View Curriculum
-                <ChevronDown
-                  className={`h-4 w-4 transition-transform ${activeDropdown === "view-curriculum" ? "rotate-180" : ""}`}
-                />
-              </button>
-
-              {activeDropdown === "view-curriculum" && (
-                <div className="absolute left-0 mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-                  <ul className="py-1">
-                    {["2019", "2022", "2023", "2024"].map((year) => (
-                      <li key={year}>
-                        <Link
-                          to="#"
-                          className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors duration-200"
-                          onClick={() => {
-                            handleCurriculumYearSelect(year, programIndex)
-                          }}
-                        >
-                          {year}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-export default CAAUndergrad
