@@ -6,7 +6,7 @@ const Home = () => {
         {/* Desktop Banner (hidden on small screens) */}
         <img
           src="/images/ocid-banner1.png"
-          alt="OCID Banner"
+         
           className="w-full h-auto hidden md:block"
           loading="eager"
         />
@@ -49,8 +49,7 @@ const Home = () => {
               <span className="absolute bottom-[-8px] left-1/2 transform -translate-x-1/2 w-12 sm:w-16 h-1 bg-green-700"></span>
             </h2>
             <p className="text-center text-sm md:text-base max-w-2xl mx-auto text-gray-700 mt-6">
-              A socially-engaged digital, innovation, and entrepreneurial university excelling globally in science,
-              engineering, and the arts by 2028.
+            A globally-engaged University excelling in science, engineering and the arts. 
             </p>
           </div>
 
@@ -61,8 +60,7 @@ const Home = () => {
               <span className="absolute bottom-[-8px] left-1/2 transform -translate-x-1/2 w-12 sm:w-16 h-1 bg-green-700"></span>
             </h2>
             <p className="text-center text-sm md:text-base max-w-2xl mx-auto text-gray-700 mt-6">
-              As a transformative university, CSU is a responsible steward of problem-solvers and value creators who are
-              driven to create a sustainable future for the region, the nation, and beyond.
+            Caraga State University endeavors to produce globallycompetitive and socially responsible human capital towards the sustainable and inclusive development of Caraga Region and beyond.
             </p>
           </div>
 
@@ -73,9 +71,8 @@ const Home = () => {
               <span className="absolute bottom-[-8px] left-1/2 transform -translate-x-1/2 w-12 sm:w-16 h-1 bg-green-700"></span>
             </h2>
             <p className="text-center text-sm md:text-base max-w-3xl mx-auto text-gray-700 mt-6">
-              Caraga State University provides advanced education in agriculture, environmental studies, engineering,
-              technology, arts and sciences. We focus on research, extension services, and leadership in our
-              specializations.
+            Caraga State University shall primarily provide advanced education, higher technological, professional instruction and training in the fields of agriculture and environmental studies, fishery, engineering, forestry, industrial technology, education, law, medicine and other health related programs, information technology, arts and sciences and other related courses. It shall undertake research and extension services, and provide progressive leadership in its areas of specialization.
+
             </p>
           </div>
 
