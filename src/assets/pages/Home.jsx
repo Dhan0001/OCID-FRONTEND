@@ -1,21 +1,43 @@
 const Home = () => {
   return (
     <div className="flex flex-col w-full">
-      {/* Hero Section with Responsive OCID Banner - Same image for all devices */}
+      {/* Hero Section with Responsive OCID Banner */}
       <div className="relative w-full">
-        {/* Single responsive banner for all screen sizes */}
-        <div className="w-full overflow-hidden">
-          <img
-            src="/images/ocid-banner1.png"
-            alt="OCID Banner"
-            className="w-full h-auto object-cover max-h-[200px] md:max-h-none"
-            loading="eager"
-          />
+        {/* Desktop Banner (hidden on small screens) */}
+        <img
+          src="/images/ocid-banner1.png"
+          alt="OCID Banner"
+          className="w-full h-auto hidden md:block"
+          loading="eager"
+        />
+
+        {/* Mobile Banner (shown only on small screens) */}
+        <div className="md:hidden bg-green-700 px-4 py-5">
+          <div className="flex flex-col items-center mb-3">
+            <img src="/images/csu-logo.png"  alt="Caraga State University Logo" className="h-14 mb-2" />
+            
+            <p className="text-yellow-300 italic text-center text-base mb-2">
+              Office of Curriculum and Instruction Development
+            </p>
+          </div>
+          <p className="text-white text-sm text-center leading-tight">
+            The Office of Curriculum and Instruction Development (OCID) works with partners to develop innovative
+            university programs.
+          </p>
+          <div className="flex justify-center mt-3">
+            <a
+              href="https://www.carsu.edu.ph/?q=news/csu-introduces-programs-solicits-stakeholders%E2%80%99-input-innovative-curricula"
+              className="px-3 py-1.5 bg-white text-green-700 text-sm font-medium rounded-md"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Read More
+            </a>
+          </div>
         </div>
       </div>
 
-      {/* Statue Image Section - Reduced height on mobile */}
-      <div className="w-full h-[80px] sm:h-[120px] md:h-[200px] bg-[url('/placeholder.svg?height=200&width=940')] bg-center bg-cover"></div>
+   
 
       {/* Content Sections with Cream Background */}
       <div className="bg-[#fffde7] py-6 sm:py-10 md:py-16">
@@ -70,8 +92,7 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Bottom Spacer - Reduced height on mobile */}
-      <div className="bg-gray-200 h-[60px] sm:h-[100px] md:h-[200px] w-full"></div>
+    
     </div>
   )
 }
