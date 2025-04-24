@@ -15,9 +15,7 @@ const CAAGraduate = () => {
       icon: Wheat,
       color: "from-green-600 to-green-800",
       curriculumFiles: {
-        2023: "https://drive.google.com/file/d/1KvvNyQ4H3B0nEohCLQD_XenpoCYm4xXS/view?usp=sharing",
-        2022: "https://drive.google.com/file/d/1mFaajZ5nfVn5sMBrfTDsP5if_oJB8DTz/view?usp=sharing",
-        2020: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1yshKEhYNkEhFuZN_f8Gfb4TROahV88f_/view?usp=sharing",
       },
     },
   ]
@@ -506,7 +504,7 @@ const ProgramCard = ({
               {activeDropdown === "view-curriculum" && (
                 <div className="absolute left-0 mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
                   <ul className="py-1">
-                    {["2019", "2022", "2023", "2024"].map((year) => (
+                    {["2023"].map((year) => (
                       <li key={year}>
                         <Link
                           to="#"

@@ -15,9 +15,7 @@ const CCISUndergrad = () => {
       icon: CodeSquare,
       color: "from-red-600 to-red-800",
       curriculumFiles: {
-        2022: "https://drive.google.com/file/d/1KvvNyQ4H3B0nEohCLQD_XenpoCYm4xXS/view?usp=sharing",
-        2020: "/placeholder.svg?height=800&width=600",
-        2014: "/placeholder.svg?height=800&width=600",
+        2022: "https://drive.google.com/file/d/1KVM9HTSdmToUbbuD09mv9y5qh4hWkYrH/view?usp=sharing",
       },
     },
     {
@@ -26,9 +24,7 @@ const CCISUndergrad = () => {
       icon: Network,
       color: "from-red-500 to-red-700",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
-        2014: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1jC75TVBtqS4j25JDtPH6sLPOiydROoeu/view?usp=sharing",
       },
     },
     {
@@ -37,9 +33,7 @@ const CCISUndergrad = () => {
       icon: Database,
       color: "from-red-400 to-red-600",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
-        2014: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/17Y1QzAKhsQ4b7DkZASwu9p-iXO6bu6au/view?usp=sharing",
       },
     },
   ]
@@ -567,7 +561,7 @@ const ProgramCard = ({
               {activeDropdown === "view-curriculum" && (
                 <div className="absolute left-0 mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
                   <ul className="py-1">
-                    {["2019", "2022", "2024"].map((year) => (
+                    {["2023"].map((year) => (
                       <li key={year}>
                         <Link
                           to="#"

@@ -27,11 +27,8 @@ const CAAUndergrad = () => {
       icon: CreditCard,
       color: "from-green-600 to-green-800",
       curriculumFiles: {
-        2023: "https://drive.google.com/file/d/1KvvNyQ4H3B0nEohCLQD_XenpoCYm4xXS/view?usp=sharing",
-        2022: "https://drive.google.com/file/d/1mFaajZ5nfVn5sMBrfTDsP5if_oJB8DTz/view?usp=sharing",
-        2014: "/placeholder.svg?height=800&width=600",
-        2005: "/placeholder.svg?height=800&width=600",
-        2003: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1VeDZkvsgah9WKeQAOzzs56m1AyKsbwoj/view?usp=sharing",
+      
       },
     },
     {
@@ -40,9 +37,8 @@ const CAAUndergrad = () => {
       icon: Wheat,
       color: "from-green-500 to-green-700",
       curriculumFiles: {
-        2023: "https://drive.google.com/file/d/1Vfv2M_ck5ktu4Ptty66dsHEUwiqeTRod/view?usp=sharing",
-        2019: "https://drive.google.com/file/d/1mFaajZ5nfVn5sMBrfTDsP5if_oJB8DTz/view?usp=sharing",
-        2014: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1P_yrcL3Nc7iADd4PgBcemJ_Xdkw7Bw76/view?usp=sharing",
+        
       },
     },
     {
@@ -51,8 +47,8 @@ const CAAUndergrad = () => {
       icon: Beef,
       color: "from-green-400 to-green-600",
       curriculumFiles: {
-        2023: "https://drive.google.com/file/d/1Vfv2M_ck5ktu4Ptty66dsHEUwiqeTRod/view?usp=sharing",
-        2020: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1Uy9KOwX51aYL7Xps6jQhQFZpSFJmesNW/view?usp=sharing",
+       
       },
     },
     {
@@ -62,7 +58,7 @@ const CAAUndergrad = () => {
       color: "from-green-500 to-green-700",
       curriculumFiles: {
         2023: "https://drive.google.com/file/d/1Vfv2M_ck5ktu4Ptty66dsHEUwiqeTRod/view?usp=sharing",
-        2020: "/placeholder.svg?height=800&width=600",
+       
       },
     },
     {
@@ -71,8 +67,8 @@ const CAAUndergrad = () => {
       icon: Flower2,
       color: "from-green-600 to-green-800",
       curriculumFiles: {
-        2023: "https://drive.google.com/file/d/1Vfv2M_ck5ktu4Ptty66dsHEUwiqeTRod/view?usp=sharing",
-        2020: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1xOx9BTA7av0oZ-FqQT5BRflE_bgcz5Th/view?usp=sharing",
+      
       },
     },
     {
@@ -81,8 +77,8 @@ const CAAUndergrad = () => {
       icon: Layers,
       color: "from-green-600 to-green-800",
       curriculumFiles: {
-        2023: "https://drive.google.com/file/d/1Vfv2M_ck5ktu4Ptty66dsHEUwiqeTRod/view?usp=sharing",
-        2020: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1R1f9TwHK-7eOXNY1FePijyzXkcQ7kseH/view?usp=sharing",
+   
       },
     },
   ]
@@ -369,9 +365,12 @@ const CAAUndergrad = () => {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       {/* Hero Section with Back Button */}
       <div className="bg-green-700 text-white py-12 relative">
-        {/* Back Button */}
-        <div className="absolute top-0 left-0">
-          <Link to="/undergrad" className="inline-flex items-center bg-white text-green-700 px-4 py-2">
+        {/* Back Button - Aligned with the navbar logo */}
+        <div className="container mx-auto px-6 relative">
+          <Link
+            to="/undergrad"
+            className="absolute left-0 -top-6 inline-flex items-center text-green-800 hover:text-green-900 bg-white hover:bg-white/90 px-4 py-2 rounded-lg transition-all duration-200 shadow-md z-10"
+          >
             <ArrowLeft className="h-5 w-5 mr-2" />
             <span className="font-medium">Back to Colleges</span>
           </Link>
@@ -652,7 +651,7 @@ const ProgramCard = ({
               {activeDropdown === "view-curriculum" && (
                 <div className="absolute left-0 mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
                   <ul className="py-1">
-                    {["2019", "2022", "2023", "2024"].map((year) => (
+                    {["2023"].map((year) => (
                       <li key={year}>
                         <Link
                           to="#"

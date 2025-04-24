@@ -15,9 +15,8 @@ const COFESUndergrad = () => {
       icon: TreePine,
       color: "from-green-600 to-green-800",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2022: "https://drive.google.com/file/d/1KvvNyQ4H3B0nEohCLQD_XenpoCYm4xXS/view?usp=sharing",
-        2014: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1sHhztOjVve1d3gDnoeF1uDWaQYH3__ES/view?usp=sharing",
+
       },
     },
     {
@@ -26,29 +25,17 @@ const COFESUndergrad = () => {
       icon: Leaf,
       color: "from-green-500 to-green-700",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
-        2014: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1q-42-BUxWtxiSvGySJNkT7RGerev4ApR/view?usp=sharing",
       },
     },
+   
     {
       id: 3,
-      name: "Bachelor of Science in Environmental Management (BSEM)",
-      icon: Globe,
-      color: "from-green-400 to-green-600",
-      curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
-      },
-    },
-    {
-      id: 4,
       name: "Bachelor of Science in Agroforestry (BSAF)",
       icon: Sprout,
       color: "from-green-500 to-green-700",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1qouiF349avau-HmMNxeQIYPkBrbi89tl/view?usp=sharing",
       },
     },
   ]
@@ -576,7 +563,7 @@ const ProgramCard = ({
               {activeDropdown === "view-curriculum" && (
                 <div className="absolute left-0 mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
                   <ul className="py-1">
-                    {["2019", "2022", "2024"].map((year) => (
+                    {["2023"].map((year) => (
                       <li key={year}>
                         <Link
                           to="#"

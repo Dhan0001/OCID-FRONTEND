@@ -15,9 +15,7 @@ const CHASSGraduate = () => {
       icon: HeartHandshake,
       color: "from-purple-600 to-purple-800",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2022: "https://drive.google.com/file/d/1KvvNyQ4H3B0nEohCLQD_XenpoCYm4xXS/view?usp=sharing",
-        2020: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/15lVN1m-icVE-dQDovFSEM8fTGsELa4JP/view?usp=sharing",
       },
     },
   ]
@@ -187,7 +185,7 @@ const CHASSGraduate = () => {
                 <p className="text-gray-700">
                   Uploading curriculum for: <span className="font-semibold">{programsState[selectedProgram].name}</span>
                 </p>
-                <p className="text-sm text-gray-600 mt-1">Year: {selectedYear}</p>
+              
               </div>
 
               <div className="space-y-5">
@@ -481,7 +479,7 @@ const ProgramCard = ({
               {activeDropdown === "view-curriculum" && (
                 <div className="absolute left-0 mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
                   <ul className="py-1">
-                    {["2019", "2022", "2024"].map((year) => (
+                    {["2023"].map((year) => (
                       <li key={year}>
                         <Link
                           to="#"

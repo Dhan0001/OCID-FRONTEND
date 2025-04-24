@@ -15,9 +15,7 @@ const CMNSGraduate = () => {
       icon: Calculator,
       color: "from-teal-600 to-teal-800",
       curriculumFiles: {
-        2022: "https://drive.google.com/file/d/1KvvNyQ4H3B0nEohCLQD_XenpoCYm4xXS/view?usp=sharing",
-        2020: "/placeholder.svg?height=800&width=600",
-        2018: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1cn1dmsleFJ5dbsEqxwTYFPQ8VobgDcHL/view?usp=sharing",
       },
     },
     {
@@ -26,9 +24,7 @@ const CMNSGraduate = () => {
       icon: GraduationCap,
       color: "from-teal-700 to-teal-900",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2022: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/11glbB9QIOGL9WBYCSt4hV1S0e-fO7PBF/view?usp=sharing", 
       },
     },
   ]

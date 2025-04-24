@@ -29,10 +29,7 @@ const CMNSUndergrad = () => {
       icon: Calculator,
       color: "from-teal-600 to-teal-800",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2022: "https://drive.google.com/file/d/1KvvNyQ4H3B0nEohCLQD_XenpoCYm4xXS/view?usp=sharing",
-        2020: "/placeholder.svg?height=800&width=600",
-        2014: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/15i_r_hS4YzTBPMJVXu3lm-8OpYhxu_Uy/view?usp=sharing",
       },
     },
     {
@@ -41,8 +38,7 @@ const CMNSUndergrad = () => {
       icon: PiSquare,
       color: "from-teal-500 to-teal-700",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1PKmpahB1wDXqztb-Vyh6-52w2qb39P0p/view?usp=sharing",
       },
     },
     {
@@ -51,8 +47,7 @@ const CMNSUndergrad = () => {
       icon: FlaskConical,
       color: "from-teal-400 to-teal-600",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1Z10o38FoizSpC-AagVrqcKyjG_8bBuWo/view?usp=sharing",
       },
     },
     {
@@ -61,8 +56,7 @@ const CMNSUndergrad = () => {
       icon: Atom,
       color: "from-teal-500 to-teal-700",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1ANzylCvrAG70BVt4Tj6cOHwNC9Wrbz3F/view?usp=sharing",
       },
     },
     {
@@ -71,8 +65,7 @@ const CMNSUndergrad = () => {
       icon: TreePine,
       color: "from-teal-600 to-teal-800",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
+        2023: "/https://drive.google.com/file/d/1JP1qXQwcuXIyUwNJQtQZUIbZUPcm-jvs/view?usp=sharing",
       },
     },
     {
@@ -81,8 +74,7 @@ const CMNSUndergrad = () => {
       icon: Microscope,
       color: "from-teal-600 to-teal-800",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/10-krMqLcRB7WH08rkZOewMt2m2kHR63O/view?usp=sharing",
       },
     },
     {
@@ -91,8 +83,7 @@ const CMNSUndergrad = () => {
       icon: Stethoscope,
       color: "from-teal-600 to-teal-800",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1Uh1GKnQ22Ew6pKd5ZEql2mhpSGXgC5ji/view?usp=sharing",
       },
     },
     {
@@ -101,8 +92,7 @@ const CMNSUndergrad = () => {
       icon: Flower,
       color: "from-teal-600 to-teal-800",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1OiMfaQIpkIxg5vg_e0JZa-_DbbsBusZM/view?usp=sharing",
       },
     },
   ]
@@ -632,7 +622,7 @@ const ProgramCard = ({
               {activeDropdown === "view-curriculum" && (
                 <div className="absolute left-0 mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
                   <ul className="py-1">
-                    {["2019", "2022", "2024"].map((year) => (
+                    {["2023"].map((year) => (
                       <li key={year}>
                         <Link
                           to="#"

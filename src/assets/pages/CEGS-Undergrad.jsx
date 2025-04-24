@@ -27,29 +27,26 @@ const CEGSUndergrad = () => {
       icon: Building,
       color: "from-orange-600 to-orange-800",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2022: "https://drive.google.com/file/d/1KvvNyQ4H3B0nEohCLQD_XenpoCYm4xXS/view?usp=sharing",
-        2014: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1hGBiqYFcqmab3kjAKBGLZET1TWvKScb7/view?usp=sharing",
       },
     },
     {
       id: 2,
-      name: "Bachelor of Science in Electrical Engineering (BSEE)",
+      name: "Bachelor of Science in Electonics Engineering (BSECE)",
       icon: CircuitBoard,
-      color: "from-orange-500 to-orange-700",
+      color: "from-orange-600 to-orange-800",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1SgFjg1dLTrPivy34LcXkFMX_xoxruheM/view?usp=sharing",
       },
     },
+   
     {
       id: 3,
       name: "Bachelor of Science in Geology (BS GEOL)",
       icon: Mountain,
       color: "from-orange-400 to-orange-600",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1qaSyCmtsKQafE3fDO0I9CGXDY20lcppi/view?usp=sharing",
       },
     },
     {
@@ -58,8 +55,7 @@ const CEGSUndergrad = () => {
       icon: Compass,
       color: "from-orange-500 to-orange-700",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/18wgc9KQ0jp5HODxfnvnqpb4Y6UlwNXQ8/view?usp=sharing",
       },
     },
     {
@@ -68,8 +64,7 @@ const CEGSUndergrad = () => {
       icon: Pickaxe,
       color: "from-orange-600 to-orange-800",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/18HMsBtU2WiBU8T940qj8lOmYn_Fm-d1k/view?usp=sharing",
       },
     },
     {
@@ -78,10 +73,11 @@ const CEGSUndergrad = () => {
       icon: Tractor,
       color: "from-orange-600 to-orange-800",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1qKxFxbOCt2WA6IVn0d3beuFePUEYcdpA/view?usp=sharing",
       },
     },
+
+   
   ]
 
   const [programsState, setProgramsState] = useState(programs)
@@ -607,7 +603,7 @@ const ProgramCard = ({
               {activeDropdown === "view-curriculum" && (
                 <div className="absolute left-0 mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
                   <ul className="py-1">
-                    {["2019", "2022", "2024"].map((year) => (
+                    {["2023"].map((year) => (
                       <li key={year}>
                         <Link
                           to="#"

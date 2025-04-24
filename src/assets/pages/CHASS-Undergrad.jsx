@@ -26,9 +26,7 @@ const CHASSUndergrad = () => {
       icon: Brain,
       color: "from-purple-500 to-purple-700",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2022: "https://drive.google.com/file/d/1KvvNyQ4H3B0nEohCLQD_XenpoCYm4xXS/view?usp=sharing",
-        2020: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1E3mXGWwpDTc0lZQd6PqIxwncvchmcYWJ/view?usp=sharing",
       },
     },
     {
@@ -37,8 +35,7 @@ const CHASSUndergrad = () => {
       icon: Users,
       color: "from-purple-600 to-purple-800",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/1Rk6x9YYAcc0qr8Sap85DNknMTjXD0KV8/view?usp=sharing",
       },
     },
     {
@@ -47,30 +44,10 @@ const CHASSUndergrad = () => {
       icon: HeartHandshake,
       color: "from-purple-600 to-purple-800",
       curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
+        2023: "https://drive.google.com/file/d/11rR2rVGcaR8zDdWvfjxMUHCe4N8LYm3O/view?usp=sharing",
       },
     },
-    {
-      id: 4,
-      name: "Bachelor of Arts in English (AB English)",
-      icon: BookText,
-      color: "from-purple-500 to-purple-700",
-      curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
-      },
-    },
-    {
-      id: 5,
-      name: "Bachelor of Arts in Philosophy (AB Philosophy)",
-      icon: Scroll,
-      color: "from-purple-500 to-purple-700",
-      curriculumFiles: {
-        2023: "/placeholder.svg?height=800&width=600",
-        2020: "/placeholder.svg?height=800&width=600",
-      },
-    },
+   
   ]
 
   const [programsState, setProgramsState] = useState(programs)
@@ -596,7 +573,7 @@ const ProgramCard = ({
               {activeDropdown === "view-curriculum" && (
                 <div className="absolute left-0 mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
                   <ul className="py-1">
-                    {["2019", "2022", "2024"].map((year) => (
+                    {["2023"].map((year) => (
                       <li key={year}>
                         <Link
                           to="#"
