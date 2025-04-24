@@ -12,10 +12,10 @@ const Home = () => {
         />
 
         {/* Mobile Banner (shown only on small screens) */}
-        <div className="md:hidden bg-green-700 px-4 py-8">
+        <div className="md:hidden bg-green-700 px-4 py-6">
           <div className="flex flex-col items-center mb-4">
             <img src="/images/logos/csu-logo.png" alt="Caraga State University Logo" className="h-16 mb-4" />
-            <h1 className="text-5xl font-bold text-white text-center mb-2">OCID</h1>
+            <h1 className="text-4xl font-bold text-white text-center mb-2">OCID</h1>
             <p className="text-yellow-300 italic text-center text-lg mb-4">
               Office of Curriculum and Instruction Development
             </p>
@@ -25,46 +25,56 @@ const Home = () => {
             and private institutions on May 7, 2024 to share developments about the university's programs and gather
             inputs to adapt to current demands.
           </p>
+          <div className="flex justify-center mt-4">
+            <a
+              href="https://www.carsu.edu.ph/?q=news/csu-introduces-programs-solicits-stakeholders%E2%80%99-input-innovative-curricula"
+              className="px-4 py-2 bg-white text-green-700 font-medium rounded-md"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Read More
+            </a>
+          </div>
         </div>
       </div>
 
       {/* Statue Image Section */}
-      <div className="w-full h-[200px] bg-[url('/placeholder.svg?height=200&width=940')] bg-center bg-cover"></div>
+      <div className="w-full h-[120px] sm:h-[200px] bg-[url('/placeholder.svg?height=200&width=940')] bg-center bg-cover"></div>
 
       {/* Content Sections with Cream Background */}
-      <div className="bg-[#fffde7] py-16">
-        <div className="container mx-auto px-6 max-w-3xl">
+      <div className="bg-[#fffde7] py-8 sm:py-16">
+        <div className="container mx-auto px-4 sm:px-6 max-w-3xl">
           {/* Our Vision */}
-          <div className="mb-16">
-            <h2 className="text-2xl font-bold text-gray-800 text-center mb-6 relative">
+          <div className="mb-10 sm:mb-16">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 text-center mb-6 relative">
               Our Vision
               <span className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-16 h-1 bg-green-700"></span>
             </h2>
-            <p className="text-center max-w-2xl mx-auto text-gray-700 mt-8">
+            <p className="text-center text-sm sm:text-base max-w-2xl mx-auto text-gray-700 mt-8">
               A socially-engaged digital, innovation, and entrepreneurial university excelling globally in science,
               engineering, and the arts by 2028.
             </p>
           </div>
 
           {/* Our Mission */}
-          <div className="mb-16">
-            <h2 className="text-2xl font-bold text-gray-800 text-center mb-6 relative">
+          <div className="mb-10 sm:mb-16">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 text-center mb-6 relative">
               Our Mission
               <span className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-16 h-1 bg-green-700"></span>
             </h2>
-            <p className="text-center max-w-2xl mx-auto text-gray-700 mt-8">
+            <p className="text-center text-sm sm:text-base max-w-2xl mx-auto text-gray-700 mt-8">
               As a transformative university, CSU is a responsible steward of problem-solvers and value creators who are
               driven to create a sustainable future for the region, the nation, and beyond.
             </p>
           </div>
 
           {/* General Mandate */}
-          <div className="mb-16">
-            <h2 className="text-2xl font-bold text-gray-800 text-center mb-6 relative">
+          <div className="mb-10 sm:mb-16">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 text-center mb-6 relative">
               General Mandate
               <span className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-16 h-1 bg-green-700"></span>
             </h2>
-            <p className="text-center max-w-3xl mx-auto text-gray-700 mt-8">
+            <p className="text-center text-sm sm:text-base max-w-3xl mx-auto text-gray-700 mt-8">
               Caraga State University shall primarily provide advanced education, higher technological, professional
               instruction and training in the fields of agriculture and environmental studies, fishery, engineering,
               forestry, industrial technology, education, law, medicine and other health related programs, information
@@ -75,17 +85,19 @@ const Home = () => {
 
           {/* Core Values */}
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-800 text-center mb-6 relative">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 text-center mb-6 relative">
               Core Values
               <span className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-16 h-1 bg-green-700"></span>
             </h2>
-            <p className="text-center max-w-2xl mx-auto text-gray-700 mt-8">Competence Service; and Uprightness</p>
+            <p className="text-center text-sm sm:text-base max-w-2xl mx-auto text-gray-700 mt-8">
+              Competence Service; and Uprightness
+            </p>
           </div>
         </div>
       </div>
 
       {/* Bottom Spacer */}
-      <div className="bg-gray-200 h-[200px] w-full"></div>
+      <div className="bg-gray-200 h-[100px] sm:h-[200px] w-full"></div>
     </div>
   )
 }

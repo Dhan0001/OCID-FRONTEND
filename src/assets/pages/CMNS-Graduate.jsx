@@ -230,7 +230,7 @@ const CMNSGraduate = () => {
             className="absolute left-0 -top-6 inline-flex items-center text-teal-800 hover:text-teal-900 bg-white hover:bg-white/90 px-4 py-2 rounded-lg transition-all duration-200 shadow-md z-10"
           >
             <ArrowLeft className="h-5 w-5 mr-2" />
-            <span className="font-medium">Back to Graduate Programs</span>
+            <span className="font-medium">Back to Colleges</span>
           </Link>
         </div>
 

@@ -8,6 +8,12 @@ body {
   margin-top: 70px;
 }
 
+@media (max-width: 640px) {
+  body {
+    margin-top: 60px;
+  }
+}
+
 /* Custom button styles */
 .custom-btn {
   @apply rounded-full bg-green-700 text-white hover:bg-green-800 transition-all duration-300 shadow-sm hover:shadow-md;
@@ -69,3 +75,14 @@ body {
   animation: fadeIn 0.3s ease-out forwards;
 }
 
+/* Simple responsive adjustments */
+@media (max-width: 640px) {
+  .section-heading {
+    @apply text-xl mb-4;
+  }
+
+  .tab-active,
+  .tab-inactive {
+    @apply text-xl;
+  }
+}

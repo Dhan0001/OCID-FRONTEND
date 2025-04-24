@@ -5,68 +5,82 @@ import { Link } from "react-router-dom"
 const Undergrad = () => {
   const collegeLogos = [
     {
-      path: "/undergrad/caa-undergrad", // Updated path format
+      
+      path: "/undergrad/caa-undergrad",
       color: "#3E7B31",
       logo: "/images/caa-logo.png",
+    
     },
     {
-      path: "/undergrad/ccis-undergrad", // Updated path format
+   
+      path: "/undergrad/ccis-undergrad",
       color: "#8B2E00",
       logo: "/images/ccis-logo.png",
+     
     },
     {
-      path: "/undergrad/ced-undergrad", // Updated path format
+     
+      path: "/undergrad/ced-undergrad",
       color: "#0047AB",
       logo: "/images/ced-logo.png",
+     
     },
     {
-      path: "/undergrad/cofes-undergrad", // Updated path format
+    
+      path: "/undergrad/cofes-undergrad",
       color: "#3E7B31",
       logo: "/images/cofes-logo.png",
+     
     },
     {
-      path: "/undergrad/chass-undergrad", // Updated path format
+   
+      path: "/undergrad/chass-undergrad",
       color: "#7E3794",
       logo: "/images/chass-logo.png",
+      
     },
     {
-      path: "/undergrad/cegs-undergrad", // Updated path format
+     
+      path: "/undergrad/cegs-undergrad",
       color: "#C45500",
       logo: "/images/cegs-logo.png",
+      
     },
     {
-      path: "/undergrad/cmns-undergrad", // Updated path format
+     
+      path: "/undergrad/cmns-undergrad",
       color: "#008080",
       logo: "/images/cmns-logo.png",
+      
     },
   ]
 
   return (
-    <div className="container mx-auto px-6 py-8">
+    <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
       {/* Tab Navigation */}
-      <div className="mb-10">
-        <div className="flex gap-8">
+      <div className="mb-8 sm:mb-10">
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 justify-center sm:justify-start">
           <button
-            className="text-gray-500 text-2xl px-0 hover:text-green-700 transition-colors duration-200"
+            className="text-gray-500 text-xl sm:text-2xl px-0 hover:text-green-700 transition-colors duration-200"
             onClick={() => (window.location.href = "/colleges")}
           >
             Graduate School
           </button>
           <div className="relative">
-            <button className="text-green-700 text-2xl font-bold px-0">Under-Graduate</button>
+            <button className="text-green-700 text-xl sm:text-2xl font-bold px-0">Under-Graduate</button>
             <div className="absolute bottom-0 left-0 w-full h-1 bg-green-700 rounded-full"></div>
           </div>
         </div>
       </div>
 
       {/* College Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-8">
         {collegeLogos.map((college) => (
           <div key={college.id} className="mb-4">
-            <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 h-[350px] flex flex-col items-center justify-between p-6">
+            <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 h-[300px] sm:h-[350px] flex flex-col items-center justify-between p-4 sm:p-6">
               {/* Logo */}
               <div className="flex-1 w-full flex flex-col items-center justify-center mb-4">
-                <div className="w-[220px] h-[220px] flex items-center justify-center bg-white rounded-xl mb-5 overflow-hidden">
+                <div className="w-[160px] h-[160px] sm:w-[220px] sm:h-[220px] flex items-center justify-center bg-white rounded-xl mb-3 sm:mb-5 overflow-hidden">
                   <img
                     src={college.logo || "/placeholder.svg"}
                     alt={`${college.id} Logo`}
@@ -74,7 +88,7 @@ const Undergrad = () => {
                   />
                 </div>
                 <div className="text-center">
-                  <h3 className="text-xl font-bold">
+                  <h3 className="text-lg sm:text-xl font-bold">
                     <span style={{ color: college.color }}>{college.id}</span>
                   </h3>
                   <p
